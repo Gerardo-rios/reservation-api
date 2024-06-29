@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "reservationbackend"
+version = "0.1.0"
+description = "Backend for a reservation app for demostrate the knowledge acquired in the ioet university 2"
+authors = ["Gerardo Rios"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.111.0"
+pytest = "^8.2.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
