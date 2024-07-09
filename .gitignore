@@ -163,6 +163,7 @@ cython_debug/
 
 # local-database
 
-db/data
-db/logs
-db/plugins
+db/neo4j/data
+db/neo4j/logs
+db/neo4j/plugins
+db/mysql

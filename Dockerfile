@@ -1,10 +1,15 @@
-FROM python:3.12
+FROM python:3.12.4-alpine3.20
 
 WORKDIR /app
 
 COPY pyproject.toml poetry.lock ./
-RUN pip install poetry && poetry config virtualenvs.create false && poetry install --no-dev
 
-COPY ./src ./src
+RUN pip install pipx && \
+    pipx install poetry && \
+    ln -s /root/.local/bin/poetry /usr/local/bin/poetry
 
-CMD ["uvicorn", "src.infrastructure.framework.fastapi.main:app", "--host", "0.0.0.0", "--port", "8000"]
+RUN poetry install --no-dev
+
+COPY . .
+
+CMD ["uvicorn", "src.infraestructure.framework.fastapi.main:app", "--host", "0.0.0.0", "--port", "8000"]

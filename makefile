@@ -5,7 +5,6 @@ COMPOSE_FILE := docker-compose.yml
 IMAGE_NAME := fields-app
 
 build:
-	docker build -t canchas-app . &&
 	docker compose -f $(COMPOSE_FILE) build
 
 up:
