@@ -1,8 +1,6 @@
-.PHONY: build up down logs shell test clean
+.PHONY: build up down logs shell test clean lint typecheck format restart check
 
 COMPOSE_FILE := docker-compose.yml
-
-IMAGE_NAME := fields-app
 
 build:
 	docker compose -f $(COMPOSE_FILE) build
@@ -20,7 +18,7 @@ shell:
 	docker compose -f $(COMPOSE_FILE) exec app /bin/bash
 
 test:
-	docker compose -f $(COMPOSE_FILE) run --rm app pytest
+	docker compose -f $(COMPOSE_FILE) run --rm app pytest src/
 
 clean:
 	docker compose -f $(COMPOSE_FILE) down -v --rmi all
@@ -28,13 +26,13 @@ clean:
 restart: down build up
 
 format:
-	docker compose -f $(COMPOSE_FILE) run --rm app black .
+	docker compose -f $(COMPOSE_FILE) run --rm app black src/
 
 lint:
-	docker compose -f $(COMPOSE_FILE) run --rm app flake8 .
+	docker compose -f $(COMPOSE_FILE) run --rm app flake8 src/ --exclude __init__.py
 
-type-check:
-	docker compose -f $(COMPOSE_FILE) run --rm app mypy .
+typecheck:
+	docker compose -f $(COMPOSE_FILE) run --rm app mypy src/
 
-run:
-	docker run -d -p 8000:8000 --name fields-api-container fields-api
+check:
+	docker compose -f $(COMPOSE_FILE) run --rm app sh -c "flake8 src/ --exclude __init__.py && mypy src && black src"
