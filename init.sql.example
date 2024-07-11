@@ -1,0 +1,15 @@
+-- Create the reservations table
+CREATE TABLE reservations (
+    id INT PRIMARY KEY,
+    name VARCHAR(255),
+    date DATE,
+    time TIME,
+    party_size INT
+);
+
+-- Insert some sample data
+INSERT INTO reservations (id, name, date, time, party_size)
+VALUES
+    (1, 'John Doe', '2022-01-01', '18:00:00', 4),
+    (2, 'Jane Smith', '2022-01-02', '19:30:00', 2),
+    (3, 'Mike Johnson', '2022-01-03', '20:00:00', 6);
