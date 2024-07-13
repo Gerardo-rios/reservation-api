@@ -74,6 +74,7 @@ If you don't have Make installed, you can find the equivalent Docker and Docker 
 
 ## Project Structure
 
+```bash
 ├── db
 │   ├── mysql
 │   │   ├── mysql-data
@@ -106,7 +107,8 @@ If you don't have Make installed, you can find the equivalent Docker and Docker 
     └── tests
         ├── core
         └── interface
-    
+```
+
 ## Development Guidelines
 
 1. Follow the Test-Driven Development (TDD) approach.
