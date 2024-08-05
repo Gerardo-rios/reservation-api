@@ -26,13 +26,13 @@ clean:
 restart: down build up
 
 format:
-	docker compose -f $(COMPOSE_FILE) run --rm app black src/
+	black src/
 
 lint:
-	docker compose -f $(COMPOSE_FILE) run --rm app flake8 src/ --exclude __init__.py
+	flake8 src/ --exclude __init__.py
 
 typecheck:
-	docker compose -f $(COMPOSE_FILE) run --rm app mypy src/
+	mypy src/
 
 check:
 	docker compose -f $(COMPOSE_FILE) run --rm app sh -c "flake8 src/ --exclude __init__.py && mypy src && black src"
