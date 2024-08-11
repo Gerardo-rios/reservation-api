@@ -10,6 +10,7 @@ class Account:
     password: str
     user: str
     photo: str
+    status: bool
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "Account":
