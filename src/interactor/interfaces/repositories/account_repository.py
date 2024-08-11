@@ -1,4 +1,3 @@
-from uuid import UUID
 from abc import ABC, abstractmethod
 from typing import Optional
 from src.domain import Account
@@ -7,7 +6,7 @@ from src.domain import Account
 class AccountRepositoryInterface(ABC):
     @abstractmethod
     def create(
-        self, account: Account, rol_id: UUID, person_id: UUID
+        self, account: Account, rol_id: str, person_id: str
     ) -> Optional[Account]:
         pass
 

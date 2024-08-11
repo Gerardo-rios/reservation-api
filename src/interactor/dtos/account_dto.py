@@ -1,4 +1,3 @@
-from uuid import UUID
 from dataclasses import dataclass, asdict
 from typing import Dict, Any
 from src.domain import Account
@@ -10,8 +9,8 @@ class CreateAccountInputDto:
     password: str
     user: str
     photo: str
-    rol_id: UUID
-    person_id: UUID
+    rol_id: str
+    person_id: str
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)

@@ -4,9 +4,7 @@ class FieldValueNotPermittedException(Exception):
         self.field_value = field_value
 
     def __str__(self) -> str:
-        return f"""
-            {self.field_name.capitalize()}: {self.field_value} is not a permitted value
-        """
+        return f"{self.field_name.capitalize()}: {self.field_value} is not a permitted value"  # noqa: E501
 
 
 class ItemNotCreatedException(Exception):
