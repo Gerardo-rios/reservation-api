@@ -11,7 +11,7 @@ def fixture_person_data() -> Dict[str, Any]:
         "phone": "1234567890",
         "address": "1234 Elm St",
         "city": "Loja",
-        "country": "EC",
+        "country": "Ecuador",
     }
 
 
@@ -19,7 +19,7 @@ def fixture_person_data() -> Dict[str, Any]:
 def fixture_rol_data() -> Dict[str, Any]:
     return {
         "rol_id": uuid.uuid4(),
-        "rol_name": "Admin",
+        "rol_name": "admin",
         "description": "Admin role",
     }
 
@@ -29,7 +29,8 @@ def fixture_account_data() -> Dict[str, Any]:
     return {
         "account_id": uuid.uuid4(),
         "email": "test_mail@gmail.com",
-        "password": "test_password",
+        "password": "Str0ngP@ss!",
         "user": "test_user",
         "photo": "test_photo",
+        "status": True,
     }
