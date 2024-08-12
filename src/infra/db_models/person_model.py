@@ -1,15 +1,14 @@
 import uuid
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.dialects.mysql import UUID
 from . import DbBase
 
 
 class PersonDBModel(DbBase):
     __tablename__ = "persons"
 
-    person_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    person_id: Mapped[str] = mapped_column(
+        String(36), primary_key=True, default=lambda: str(uuid.uuid4())
     )
     name: Mapped[str] = mapped_column(String(50), nullable=False)
     phone: Mapped[str] = mapped_column(String(20), nullable=False)
@@ -20,7 +19,7 @@ class PersonDBModel(DbBase):
     def __init__(
         self, name: str, phone: str, address: str, city: str, country: str
     ) -> None:
-        self.person_id = uuid.uuid4()
+        self.person_id = str(uuid.uuid4())
         self.name = name
         self.phone = phone
         self.address = address

@@ -1,4 +1,4 @@
-.PHONY: build up down logs shell test clean lint typecheck format db-rebuild mysql-cli db-dump db-restore check-python-version init
+.PHONY: build up down logs shell test clean format db-rebuild mysql-cli db-dump db-restore check-python-version init
 
 COMPOSE_FILE := docker-compose.yml
 
@@ -26,20 +26,10 @@ clean:
 restart: down build up
 
 format:
-	black src/
-
-lint:
-	flake8 src/ --exclude __init__.py
-
-typecheck:
-	mypy src/
-
-check:
-	docker compose -f $(COMPOSE_FILE) run --rm app sh -c "flake8 src/ --exclude __init__.py && mypy src && black src"
+	flake8 src/ --exclude __init__.py && mypy src && black src
 
 db-rebuild:
-	docker compose exec mysql mysql -uuser -ppassword -e "DROP DATABASE IF EXISTS fields_app_db; CREATE DATABASE fields_app_db;"
-	docker compose exec mysql mysql -uuser -ppassword fields_app_db < db/mysql/mysql-init/init.sql
+	docker compose exec mysql mysql -u$(DB_USER) -p$(DB_PASSWORD) -e "DROP DATABASE IF EXISTS fields_app_db; CREATE DATABASE fields_app_db;"
 
 mysql-cli:
 	docker compose exec mysql mysql -uuser -ppassword fields_app_db
@@ -64,3 +54,13 @@ init: check-python-version
     pip install poetry && \
     poetry install && \
     pre-commit install
+
+alembic-autogenerate:
+	@if [ -z "$(MESSAGE)" ]; then \
+		echo "Error: MESSAGE is required. Use 'make alembic-autogenerate MESSAGE=\"Your migration message\"'"; \
+		exit 1; \
+	fi
+	alembic revision --autogenerate -m "$(MESSAGE)"
+
+alembic-upgrade:
+	alembic upgrade head

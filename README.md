@@ -44,12 +44,12 @@ make up
 
 If you don't have Make installed, you can use `docker-compose build` and `docker-compose up -d` instead.
 
-4. Create the database init file:
+4. Migrate the database:
 
 ```bash
-cp init.sql.example db/mysql/mysql-init/init.sql
+make alembic-autogenerate MESSAGE="Initial migration"
+make alembic-upgrade
 ```
-
 
 Your API should now be running at `http://localhost:8000`.
 
@@ -69,6 +69,8 @@ Here are some useful commands you can use (assuming you have Make installed):
 - `make mysql-cli`: Enter MySQL CLI
 - `make db-dump`: Dump the database
 - `make db-restore`: Restore the database from a dump
+- `make alembic-revision`: Create a new Alembic revision to commit new migrations
+- `make alembic-upgrade`: Upgrade the database to the latest revision
 
 If you don't have Make installed, you can find the equivalent Docker and Docker Compose commands in the Makefile.
 
