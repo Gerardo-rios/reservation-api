@@ -1,11 +1,10 @@
 from dataclasses import asdict, dataclass
-from uuid import UUID
 from typing import Dict, Any
 
 
 @dataclass
 class Person:
-    person_id: UUID
+    person_id: str
     name: str
     phone: str
     address: str

@@ -1,11 +1,10 @@
 from dataclasses import asdict, dataclass
-from uuid import UUID
 from typing import Dict, Any
 
 
 @dataclass
 class Account:
-    account_id: UUID
+    account_id: str
     email: str
     password: str
     user: str

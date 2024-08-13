@@ -5,7 +5,9 @@ from src.domain import Person
 
 class PersonRepositoryInterface(ABC):
     @abstractmethod
-    def create(self, person: Person) -> Optional[Person]:
+    def create(
+        self, name: str, phone: str, address: str, city: str, country: str
+    ) -> Optional[Person]:
         pass
 
     @abstractmethod
@@ -14,8 +16,4 @@ class PersonRepositoryInterface(ABC):
 
     @abstractmethod
     def update(self, person: Person) -> Optional[Person]:
-        pass
-
-    @abstractmethod
-    def delete(self, person_id: str) -> bool:
         pass

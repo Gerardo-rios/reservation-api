@@ -1,11 +1,10 @@
 from dataclasses import asdict, dataclass
-from uuid import UUID
 from typing import Dict, Any
 
 
 @dataclass
 class Rol:
-    rol_id: UUID
+    rol_id: str
     rol_name: str
     description: str
 

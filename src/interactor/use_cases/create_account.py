@@ -28,7 +28,7 @@ class CreateAccountUseCase:
             input_dto.password.encode("utf-8"), bcrypt.gensalt()
         ).decode("utf-8")
         input_account = Account(
-            account_id=uuid.uuid4(),
+            account_id=str(uuid.uuid4()),
             email=input_dto.email,
             password=hashed_password,
             user=input_dto.user,
