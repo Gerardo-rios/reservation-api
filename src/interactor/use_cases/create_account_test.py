@@ -49,7 +49,9 @@ def test_create_account(
         rol_id=fixture_rol_data["rol_id"],
         person_id=fixture_person_data["person_id"],
     )
-    output_dto = CreateAccountOutputDto(account)
+    output_dto = CreateAccountOutputDto(
+        account, fixture_rol_data["rol_id"], fixture_person_data["person_id"]
+    )
     response = use_case.execute(input_dto)
 
     dependencies["account_repository"].create.assert_called_once()

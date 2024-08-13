@@ -19,3 +19,5 @@ class CreateAccountInputDto:
 @dataclass
 class CreateAccountOutputDto:
     account: Account
+    rol_id: str
+    person_id: str

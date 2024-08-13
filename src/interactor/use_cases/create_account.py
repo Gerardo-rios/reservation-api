@@ -37,6 +37,8 @@ class CreateAccountUseCase:
         if account is None:
             raise ItemNotCreatedException(input_dto.email, "account")
 
-        output_dto = CreateAccountOutputDto(account)
+        output_dto = CreateAccountOutputDto(
+            account, input_dto.rol_id, input_dto.person_id
+        )
         presenter_response = self.presenter.present(output_dto)
         return presenter_response

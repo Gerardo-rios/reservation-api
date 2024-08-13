@@ -6,7 +6,7 @@ from typing import Dict, Any
 @pytest.fixture
 def fixture_person_data() -> Dict[str, Any]:
     return {
-        "person_id": uuid.uuid4(),
+        "person_id": str(uuid.uuid4()),
         "name": "John Doe",
         "phone": "1234567890",
         "address": "1234 Elm St",
@@ -18,7 +18,7 @@ def fixture_person_data() -> Dict[str, Any]:
 @pytest.fixture
 def fixture_rol_data() -> Dict[str, Any]:
     return {
-        "rol_id": uuid.uuid4(),
+        "rol_id": str(uuid.uuid4()),
         "rol_name": "admin",
         "description": "Admin role",
     }
@@ -27,7 +27,7 @@ def fixture_rol_data() -> Dict[str, Any]:
 @pytest.fixture
 def fixture_account_data() -> Dict[str, Any]:
     return {
-        "account_id": uuid.uuid4(),
+        "account_id": str(uuid.uuid4()),
         "email": "test_mail@gmail.com",
         "password": "Str0ngP@ss!",
         "user": "test_user",
