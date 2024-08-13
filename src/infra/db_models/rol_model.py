@@ -12,8 +12,3 @@ class RolDBModel(DbBase):
     )
     role_name: Mapped[str] = mapped_column(String(50), nullable=False, unique=True)
     description: Mapped[str] = mapped_column(String(100), nullable=False)
-
-    def __init__(self, role_name: str, description: str) -> None:
-        self.rol_id = str(uuid.uuid4())
-        self.role_name = role_name
-        self.description = description

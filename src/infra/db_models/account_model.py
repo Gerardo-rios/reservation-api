@@ -23,22 +23,3 @@ class AccountDBModel(DbBase):
         String(36), ForeignKey("persons.person_id"), nullable=False
     )
     person = relationship("PersonDBModel")
-
-    def __init__(
-        self,
-        email: str,
-        password: str,
-        username: str,
-        photo: str,
-        status: bool,
-        rol_id: str,
-        person_id: str,
-    ) -> None:
-        self.account_id = str(uuid.uuid4())
-        self.email = email
-        self.password = password
-        self.username = username
-        self.photo = photo
-        self.status = status
-        self.rol_id = rol_id
-        self.person_id = person_id

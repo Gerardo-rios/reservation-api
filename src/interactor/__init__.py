@@ -17,6 +17,7 @@ from .errors import (
     EmailFormatException,
     PasswordFormatException,
     ItemNotFoundException,
+    UniqueViolationError,
 )
 from .validations import (
     BaseInputValidator,

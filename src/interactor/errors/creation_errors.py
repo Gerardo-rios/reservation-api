@@ -30,3 +30,7 @@ class PasswordFormatException(Exception):
 
     def __str__(self) -> str:
         return f"Password '{self.password}' has not the required format"
+
+
+class UniqueViolationError(Exception):
+    """Exception raised when a unique constraint is violated"""
