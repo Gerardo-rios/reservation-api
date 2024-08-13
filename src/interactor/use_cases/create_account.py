@@ -1,7 +1,5 @@
 import bcrypt
-import uuid
 from typing import Any, Dict
-from src.domain import Account
 from src.interactor import (
     CreateAccountInputDto,
     CreateAccountOutputDto,
@@ -27,16 +25,12 @@ class CreateAccountUseCase:
         hashed_password = bcrypt.hashpw(
             input_dto.password.encode("utf-8"), bcrypt.gensalt()
         ).decode("utf-8")
-        input_account = Account(
-            account_id=str(uuid.uuid4()),
+        account = self.account_repository.create(
             email=input_dto.email,
             password=hashed_password,
             user=input_dto.user,
             photo=input_dto.photo,
             status=True,
-        )
-        account = self.account_repository.create(
-            account=input_account,
             rol_id=input_dto.rol_id,
             person_id=input_dto.person_id,
         )

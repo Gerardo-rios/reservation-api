@@ -6,7 +6,14 @@ from src.domain import Account
 class AccountRepositoryInterface(ABC):
     @abstractmethod
     def create(
-        self, account: Account, rol_id: str, person_id: str
+        self,
+        email: str,
+        password: str,
+        user: str,
+        photo: str,
+        status: bool,
+        rol_id: str,
+        person_id: str,
     ) -> Optional[Account]:
         pass
 
@@ -16,8 +23,4 @@ class AccountRepositoryInterface(ABC):
 
     @abstractmethod
     def update(self, account: Account) -> Optional[Account]:
-        pass
-
-    @abstractmethod
-    def delete(self, account_id: str) -> bool:
         pass

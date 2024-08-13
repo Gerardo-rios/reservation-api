@@ -166,9 +166,9 @@ def test_mysql_person_repository_update_person(test_setup: Dict[str, Any]) -> No
 
     assert updated_person is not None
     assert updated_person.person_id == test_data["new_person"]["person_id"]
-    assert updated_person.name == "Jane Doe"
-    assert updated_person.phone == "0987654321"
-    assert updated_person.address == "4321 Oak St"
+    assert updated_person.name == person.name
+    assert updated_person.phone == person.phone
+    assert updated_person.address == person.address
     repository._PersonMySQLRepository__session.query.assert_called_once()
     repository._PersonMySQLRepository__session.query.return_value.filter_by.assert_called_once()  # noqa E501
     repository._PersonMySQLRepository__session.query.return_value.filter_by.return_value.update.assert_called_once()  # noqa E501
