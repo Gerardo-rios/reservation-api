@@ -32,13 +32,13 @@ db-rebuild:
 	docker compose exec mysql mysql -u$(DB_USER) -p$(DB_PASSWORD) -e "DROP DATABASE IF EXISTS fields_app_db; CREATE DATABASE fields_app_db;"
 
 mysql-cli:
-	docker compose exec mysql mysql -uuser -ppassword fields_app_db
+	docker compose exec mysql mysql -u$(DB_USER) -p$(DB_PASSWORD) fields_app_db
 
 db-dump:
-	docker compose exec mysql sh -c 'exec mysqldump -uuser -ppassword fields_app_db' > db/mysql/mysql-dump/fields_app_db.sql
+	docker compose exec mysql sh -c 'exec mysqldump -u$(DB_USER) -p$(DB_PASSWORD) fields_app_db' > db/mysql/mysql-dump/fields_app_db.sql
 
 db-restore:
-	docker compose exec -T mysql mysql -uuser -ppassword fields_app_db < db/mysql/mysql-dump/fields_app_db.sql
+	docker compose exec -T mysql mysql -u$(DB_USER) -p$(DB_PASSWORD) fields_app_db < db/mysql/mysql-dump/fields_app_db.sql
 
 check-python-version:
 	@echo "Checking python version..."

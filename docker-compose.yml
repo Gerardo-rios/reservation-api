@@ -8,6 +8,8 @@ services:
     restart: unless-stopped
     depends_on:
       - mysql
+    volumes:
+      - .:/app
   
   mysql:
     image: mysql:8.0

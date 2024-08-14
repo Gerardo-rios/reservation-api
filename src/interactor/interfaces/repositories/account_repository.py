@@ -12,7 +12,7 @@ class AccountRepositoryInterface(ABC):
         user: str,
         photo: str,
         status: bool,
-        rol_id: str,
+        role_id: str,
         person_id: str,
     ) -> Optional[Account]:
         pass

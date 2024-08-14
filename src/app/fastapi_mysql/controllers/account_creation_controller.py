@@ -4,12 +4,15 @@ from src.interactor import (
     CreatePersonUseCase,
     CreateAccountInputDto,
     CreatePersonInputDto,
+    GetRoleUseCase,
+    GetRoleInputDto,
 )
 from src.infra import AccountMySQLRepository, PersonMySQLRepository, RolMySQLRepository
-from src.app.fastapi_mysql import (
-    AccountControllerInterface,
+from src.app.fastapi_mysql.interfaces import AccountControllerInterface
+from src.app.fastapi_mysql.presenters import (
     CreateAccountPresenter,
     CreatePersonPresenter,
+    GetRolePresenter,
 )
 
 
@@ -31,15 +34,19 @@ class CreateAccountController(AccountControllerInterface):
         )
 
         person_repository = PersonMySQLRepository()
-        rol_repository = RolMySQLRepository()
+        role_repository = RolMySQLRepository()
         create_person_use_case = CreatePersonUseCase(
             person_repository=person_repository,
             presenter=CreatePersonPresenter(),
         )
+        get_role_use_case = GetRoleUseCase(
+            role_repository=role_repository,
+            role_presenter=GetRolePresenter(),
+        )
 
         try:
             person = create_person_use_case.execute(self.input_person_dto)
-            role = rol_repository.get(role_name=json_input_data["rol"])
+            role = get_role_use_case.execute(GetRoleInputDto(role_name="user"))
             if not role:
                 raise ValueError("Role not found")
             self.input_account_dto = CreateAccountInputDto(
@@ -47,7 +54,7 @@ class CreateAccountController(AccountControllerInterface):
                 password=json_input_data["password"],
                 user=json_input_data["user"],
                 photo=json_input_data["photo"],
-                rol_id=role.rol_id,
+                role_id=role["role_id"],
                 person_id=person["person_id"],
             )
         except Exception as e:

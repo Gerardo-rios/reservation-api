@@ -1,7 +1,11 @@
-from .presenters import CreateAccountPresenterInterface, CreatePersonPresenterInterface
+from .presenters import (
+    CreateAccountPresenterInterface,
+    CreatePersonPresenterInterface,
+    GetRolePresenterInterface,
+)
 
 from .repositories import (
     AccountRepositoryInterface,
     PersonRepositoryInterface,
-    RolRepositoryInterface,
+    RoleRepositoryInterface,
 )

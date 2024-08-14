@@ -8,14 +8,14 @@ from src.interactor import EmailFormatException, PasswordFormatException
 @pytest.fixture
 def test_data(
     fixture_account_data: Dict[str, str],
-    fixture_rol_data: Dict[str, Any],
+    fixture_role_data: Dict[str, Any],
     fixture_person_data: Dict[str, Any],
 ) -> Dict[str, Any]:
     del fixture_account_data["account_id"]
     del fixture_account_data["status"]
     return {
         **fixture_account_data,
-        "rol_id": str(fixture_rol_data["rol_id"]),
+        "role_id": str(fixture_role_data["role_id"]),
         "person_id": str(fixture_person_data["person_id"]),
     }
 
@@ -50,7 +50,7 @@ def test_create_account_input_dto_validator(
             "empty": False,
         },
         "photo": {"type": "string", "required": False, "empty": True},
-        "rol_id": {"type": "string", "required": True, "empty": False},
+        "role_id": {"type": "string", "required": True, "empty": False},
         "person_id": {"type": "string", "required": True, "empty": False},
     }
     validator = CreateAccountInputDtoValidator(input_data)
@@ -92,11 +92,11 @@ def test_create_account_input_dto_validator_with_empty_values(
     input_data = test_data
     input_data["email"] = ""
     input_data["password"] = ""
-    input_data["rol_id"] = ""
+    input_data["role_id"] = ""
     validator = CreateAccountInputDtoValidator(input_data)
     with pytest.raises(ValueError) as e:
         validator.validate()
     assert (
         str(e.value)
-        == "email: empty values not allowed\npassword: empty values not allowed\nrol_id: empty values not allowed"  # noqa
+        == "email: empty values not allowed\npassword: empty values not allowed\nrole_id: empty values not allowed"  # noqa
     )

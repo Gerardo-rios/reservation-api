@@ -164,4 +164,3 @@ cython_debug/
 # local-database
 
 db/mysql
-alembic/versions

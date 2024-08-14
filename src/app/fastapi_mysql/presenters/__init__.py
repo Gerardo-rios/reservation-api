@@ -1,2 +1,3 @@
 from .create_account_presenter import CreateAccountPresenter
 from .create_person_presenter import CreatePersonPresenter
+from .get_role_presenter import GetRolePresenter

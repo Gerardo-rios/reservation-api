@@ -16,10 +16,10 @@ def fixture_person_data() -> Dict[str, Any]:
 
 
 @pytest.fixture
-def fixture_rol_data() -> Dict[str, Any]:
+def fixture_role_data() -> Dict[str, Any]:
     return {
-        "rol_id": str(uuid.uuid4()),
-        "rol_name": "admin",
+        "role_id": str(uuid.uuid4()),
+        "role_name": "admin",
         "description": "Admin role",
     }
 

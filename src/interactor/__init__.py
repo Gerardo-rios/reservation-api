@@ -3,13 +3,16 @@ from .dtos import (
     CreatePersonOutputDto,
     CreateAccountInputDto,
     CreateAccountOutputDto,
+    GetRoleInputDto,
+    GetRoleOutputDto,
 )
 from .interfaces import (
     AccountRepositoryInterface,
     CreateAccountPresenterInterface,
     CreatePersonPresenterInterface,
     PersonRepositoryInterface,
-    RolRepositoryInterface,
+    RoleRepositoryInterface,
+    GetRolePresenterInterface,
 )
 from .errors import (
     FieldValueNotPermittedException,
@@ -27,4 +30,5 @@ from .validations import (
 from .use_cases import (
     CreatePersonUseCase,
     CreateAccountUseCase,
+    GetRoleUseCase,
 )

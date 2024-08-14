@@ -6,12 +6,12 @@ from . import CreateAccountPresenter
 
 def test_create_account_presenter(
     fixture_account_data: Dict[str, Any],
-    fixture_rol_data: Dict[str, Any],
+    fixture_role_data: Dict[str, Any],
     fixture_person_data: Dict[str, Any],
 ) -> None:
     account = Account(**fixture_account_data)
     output_dto = CreateAccountOutputDto(
-        account, fixture_rol_data["rol_id"], fixture_person_data["person_id"]
+        account, fixture_role_data["role_id"], fixture_person_data["person_id"]
     )
     presenter = CreateAccountPresenter()
     response = presenter.present(output_dto)
@@ -22,5 +22,5 @@ def test_create_account_presenter(
         "photo": fixture_account_data["photo"],
         "status": fixture_account_data["status"],
         "person_id": fixture_person_data["person_id"],
-        "rol_id": fixture_rol_data["rol_id"],
+        "role_id": fixture_role_data["role_id"],
     }

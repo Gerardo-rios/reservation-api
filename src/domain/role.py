@@ -3,13 +3,13 @@ from typing import Dict, Any
 
 
 @dataclass
-class Rol:
-    rol_id: str
-    rol_name: str
+class Role:
+    role_id: str
+    role_name: str
     description: str
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "Rol":
+    def from_dict(cls, data: Dict[str, Any]) -> "Role":
         return cls(**data)
 
     def to_dict(self) -> Dict[str, str]:

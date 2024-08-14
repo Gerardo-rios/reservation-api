@@ -1,3 +1,3 @@
 from .person import Person
-from .rol import Rol
+from .role import Role
 from .account import Account

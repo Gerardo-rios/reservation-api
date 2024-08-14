@@ -28,7 +28,7 @@ def test_setup(mocker: MockerFixture) -> Dict[str, Any]:
             "username": "test_user",
             "photo": "test_photo",
             "status": True,
-            "rol_id": "test_rol_id",
+            "role_id": "test_rol_id",
             "person_id": "test_person_id",
         }
     }
@@ -61,7 +61,7 @@ def test_mysql_account_repository_create_account(test_setup: Dict[str, Any]) -> 
         test_data["new_account"]["username"],
         test_data["new_account"]["photo"],
         test_data["new_account"]["status"],
-        test_data["new_account"]["rol_id"],
+        test_data["new_account"]["role_id"],
         test_data["new_account"]["person_id"],
     )
 
@@ -91,7 +91,7 @@ def test_mysql_account_repository_create_account_unique_violation(
             test_data["new_account"]["username"],
             test_data["new_account"]["photo"],
             test_data["new_account"]["status"],
-            test_data["new_account"]["rol_id"],
+            test_data["new_account"]["role_id"],
             test_data["new_account"]["person_id"],
         )
 
@@ -152,7 +152,7 @@ def test_mysql_account_repository_update_account(test_setup: Dict[str, Any]) -> 
         username=account.user,
         photo=account.photo,
         status=account.status,
-        rol_id=test_data["new_account"]["rol_id"],
+        role_id=test_data["new_account"]["role_id"],
         person_id=test_data["new_account"]["person_id"],
     )
     repository._AccountMySQLRepository__session.query.return_value.filter_by.return_value.update.return_value = (  # noqa
@@ -194,7 +194,7 @@ def test_mysql_account_repository_update_non_existing_account(
         username=account.user,
         photo=account.photo,
         status=account.status,
-        rol_id=test_data["new_account"]["rol_id"],
+        role_id=test_data["new_account"]["role_id"],
         person_id=test_data["new_account"]["person_id"],
     )
     repository._AccountMySQLRepository__session.query.return_value.filter_by.return_value.update.return_value = (  # noqa

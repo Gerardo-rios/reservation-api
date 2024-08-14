@@ -31,7 +31,7 @@ class CreateAccountInputDtoValidator(BaseInputValidator):
                 "empty": False,
             },
             "photo": {"type": "string", "required": False, "empty": True},
-            "rol_id": {"type": "string", "required": True, "empty": False},
+            "role_id": {"type": "string", "required": True, "empty": False},
             "person_id": {"type": "string", "required": True, "empty": False},
         }
 

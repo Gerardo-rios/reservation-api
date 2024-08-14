@@ -11,5 +11,5 @@ class CreateAccountPresenter(CreateAccountPresenterInterface):
             "photo": response.account.photo,
             "status": response.account.status,
             "person_id": response.person_id,
-            "rol_id": response.rol_id,
+            "role_id": response.role_id,
         }

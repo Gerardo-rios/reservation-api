@@ -15,8 +15,8 @@ class AccountDBModel(DbBase):
     username: Mapped[str] = mapped_column(String(50), nullable=False)
     photo: Mapped[str] = mapped_column(String(255), nullable=True)
     status: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
-    rol_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey("roles.rol_id"), nullable=False
+    role_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("roles.role_id"), nullable=False
     )
     rol = relationship("RolDBModel")
     person_id: Mapped[str] = mapped_column(

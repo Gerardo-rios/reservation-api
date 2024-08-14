@@ -9,7 +9,7 @@ class CreateAccountInputDto:
     password: str
     user: str
     photo: str
-    rol_id: str
+    role_id: str
     person_id: str
 
     def to_dict(self) -> Dict[str, Any]:
@@ -19,5 +19,5 @@ class CreateAccountInputDto:
 @dataclass
 class CreateAccountOutputDto:
     account: Account
-    rol_id: str
+    role_id: str
     person_id: str

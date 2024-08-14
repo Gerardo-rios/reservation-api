@@ -1,149 +1,127 @@
-from typing import Dict
 import pytest
-from unittest.mock import patch, MagicMock
-from src.app.fastapi_mysql import CreateAccountController
-from src.interactor import CreateAccountInputDto, CreatePersonInputDto
+from unittest.mock import Mock, patch
+from src.app.fastapi_mysql.controllers import CreateAccountController
+from src.interactor import CreatePersonUseCase, GetRoleUseCase, CreateAccountUseCase
 
 
 @pytest.fixture
-def valid_input_data() -> Dict[str, str]:
-    return {
+def create_account_controller() -> CreateAccountController:
+    return CreateAccountController()
+
+
+def test_create_account_info_valid_input(
+    create_account_controller: CreateAccountController,
+) -> None:
+    valid_input = {
         "name": "John Doe",
         "phone": "1234567890",
         "address": "123 Main St",
-        "email": "john.doe@example.com",
-        "password": "S3curep@ssw0rd!",
+        "email": "john@example.com",
+        "password": "Str0ngpassword!23",
         "user": "johndoe",
-        "photo": "photo_url",
-        "rol": "admin",
+        "photo": "profile.jpg",
+        "role_name": "user",
     }
 
+    with patch.object(
+        CreatePersonUseCase,
+        "execute",
+        return_value={"person_id": "033f9886-316a-401b-9414-78c57f4ac502"},
+    ), patch.object(
+        GetRoleUseCase,
+        "execute",
+        return_value={"role_id": "1b4c1948-3cb3-46d1-85c6-454a457216aa"},
+    ):
+        create_account_controller.create_account_info(valid_input)
 
-@pytest.fixture
-def invalid_input_data() -> Dict[str, str]:
-    return {
+    assert create_account_controller.input_person_dto.name == "John Doe"
+    assert create_account_controller.input_person_dto.phone == "1234567890"
+    assert create_account_controller.input_person_dto.address == "123 Main St"
+    assert create_account_controller.input_person_dto.city == "loja"
+    assert create_account_controller.input_person_dto.country == "ecuador"
+
+    assert create_account_controller.input_account_dto.email == "john@example.com"
+    assert create_account_controller.input_account_dto.password == "Str0ngpassword!23"
+    assert create_account_controller.input_account_dto.user == "johndoe"
+    assert create_account_controller.input_account_dto.photo == "profile.jpg"
+    assert (
+        create_account_controller.input_account_dto.role_id
+        == "1b4c1948-3cb3-46d1-85c6-454a457216aa"
+    )
+    assert (
+        create_account_controller.input_account_dto.person_id
+        == "033f9886-316a-401b-9414-78c57f4ac502"
+    )
+
+
+def test_create_account_info_invalid_input(
+    create_account_controller: CreateAccountController,
+) -> None:
+    with pytest.raises(ValueError, match="Invalid input data"):
+        create_account_controller.create_account_info({})
+
+
+def test_create_account_info_person_creation_failure(
+    create_account_controller: CreateAccountController,
+) -> None:
+    valid_input = {
         "name": "John Doe",
         "phone": "1234567890",
         "address": "123 Main St",
-        "email": "john.doe@example.com",
-        "password": "securepassword",
+        "email": "john@example.com",
+        "password": "password123",
         "user": "johndoe",
-        "photo": "photo_url",
+        "photo": "profile.jpg",
     }
 
+    with patch.object(
+        CreatePersonUseCase, "execute", side_effect=Exception("Person creation failed")
+    ):
+        with pytest.raises(
+            ValueError, match="Person could not be created: Person creation failed"
+        ):
+            create_account_controller.create_account_info(valid_input)
 
-@patch(
-    "src.app.fastapi_mysql.controllers.account_creation_controller.PersonMySQLRepository"  # noqa
-)
-@patch(
-    "src.app.fastapi_mysql.controllers.account_creation_controller.RolMySQLRepository"
-)
-@patch(
-    "src.app.fastapi_mysql.controllers.account_creation_controller.CreatePersonUseCase"
-)
-@patch(
-    "src.app.fastapi_mysql.controllers.account_creation_controller.CreatePersonPresenter"  # noqa
-)
-def test_create_account_info_valid(
-    mock_person_presenter: MagicMock,
-    mock_person_use_case: MagicMock,
-    mock_rol_repo: MagicMock,
-    mock_person_repo: MagicMock,
-    valid_input_data: Dict[str, str],
+
+def test_create_account_info_role_not_found(
+    create_account_controller: CreateAccountController,
 ) -> None:
-    mock_person_use_case.return_value.execute.return_value = {
-        "person_id": "d7b25679-4dbd-4c4a-a5ac-d929e230e76f"
-    }
-    mock_rol_repo.return_value.get.return_value = MagicMock(
-        rol_id="5be5c5e2-ba46-4455-9f63-9050b5f6421e"
-    )
-
-    controller = CreateAccountController()
-    controller.create_account_info(valid_input_data)
-
-    assert isinstance(controller.input_person_dto, CreatePersonInputDto)
-    assert isinstance(controller.input_account_dto, CreateAccountInputDto)
-
-
-@patch(
-    "src.app.fastapi_mysql.controllers.account_creation_controller.PersonMySQLRepository"  # noqa
-)
-@patch(
-    "src.app.fastapi_mysql.controllers.account_creation_controller.RolMySQLRepository"
-)
-@patch(
-    "src.app.fastapi_mysql.controllers.account_creation_controller.CreatePersonUseCase"
-)
-@patch(
-    "src.app.fastapi_mysql.controllers.account_creation_controller.CreatePersonPresenter"  # noqa
-)
-def test_create_account_info_invalid(
-    mock_person_presenter: MagicMock,
-    mock_person_use_case: MagicMock,
-    mock_rol_repo: MagicMock,
-    mock_person_repo: MagicMock,
-    invalid_input_data: Dict[str, str],
-) -> None:
-    controller = CreateAccountController()
-
-    with pytest.raises(ValueError):
-        controller.create_account_info(invalid_input_data)
-
-
-@patch(
-    "src.app.fastapi_mysql.controllers.account_creation_controller.AccountMySQLRepository"  # noqa
-)
-@patch(
-    "src.app.fastapi_mysql.controllers.account_creation_controller.CreateAccountUseCase"
-)
-@patch(
-    "src.app.fastapi_mysql.controllers.account_creation_controller.CreateAccountPresenter"  # noqa
-)
-def test_execute_success(
-    mock_account_presenter: MagicMock,
-    mock_account_use_case: MagicMock,
-    mock_account_repo: MagicMock,
-    valid_input_data: Dict[str, str],
-) -> None:
-    mock_account_use_case.return_value.execute.return_value = {
-        "account_id": "e537c036-4ac4-45ef-b7df-0e3c585483d7"
+    valid_input = {
+        "name": "John Doe",
+        "phone": "1234567890",
+        "address": "123 Main St",
+        "email": "john@example.com",
+        "password": "password123",
+        "user": "johndoe",
+        "photo": "profile.jpg",
     }
 
-    controller = CreateAccountController()
-    controller.input_account_dto = CreateAccountInputDto(
-        email=valid_input_data["email"],
-        password=valid_input_data["password"],
-        user=valid_input_data["user"],
-        photo=valid_input_data["photo"],
-        rol_id="5be5c5e2-ba46-4455-9f63-9050b5f6421e",
-        person_id="d7b25679-4dbd-4c4a-a5ac-d929e230e76f",
-    )
-
-    response = controller.execute()
-
-    assert response == {"account_id": "e537c036-4ac4-45ef-b7df-0e3c585483d7"}
+    with patch.object(
+        CreatePersonUseCase, "execute", return_value={"person_id": 1}
+    ), patch.object(GetRoleUseCase, "execute", return_value=None):
+        with pytest.raises(ValueError, match="Role not found"):
+            create_account_controller.create_account_info(valid_input)
 
 
-@patch(
-    "src.app.fastapi_mysql.controllers.account_creation_controller.AccountMySQLRepository"  # noqa
-)
-@patch(
-    "src.app.fastapi_mysql.controllers.account_creation_controller.CreateAccountUseCase"
-)
-@patch(
-    "src.app.fastapi_mysql.controllers.account_creation_controller.CreateAccountPresenter"  # noqa
-)
-def test_execute_failure(
-    mock_account_presenter: MagicMock,
-    mock_account_use_case: MagicMock,
-    mock_account_repo: MagicMock,
-) -> None:
-    mock_account_use_case.return_value.execute.side_effect = Exception(
-        "Account creation failed"
-    )
+def test_execute_successful(create_account_controller: CreateAccountController) -> None:
+    create_account_controller.input_account_dto = Mock()
+    expected_response = {"account_id": 1, "message": "Account created successfully"}
 
-    controller = CreateAccountController()
-    controller.input_account_dto = MagicMock()
+    with patch.object(CreateAccountUseCase, "execute", return_value=expected_response):
+        response = create_account_controller.execute()
 
-    with pytest.raises(ValueError):
-        controller.execute()
+    assert response == expected_response
+
+
+def test_execute_failure(create_account_controller: CreateAccountController) -> None:
+    create_account_controller.input_account_dto = Mock()
+
+    with patch.object(
+        CreateAccountUseCase,
+        "execute",
+        side_effect=Exception("Account creation failed"),
+    ):
+        with pytest.raises(
+            ValueError, match="Account could not be created: Account creation failed"
+        ):
+            create_account_controller.execute()

@@ -2,7 +2,7 @@ from typing import Any, Dict
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse
 
-from . import hello_world_router
+from . import account_router
 from src import Session as DbSession
 
 
@@ -21,7 +21,7 @@ def format_error_response(error: Exception, error_code: int) -> Dict[str, Any]:
 def create_fastapi_app() -> FastAPI:
     app = FastAPI()
 
-    app.include_router(hello_world_router, prefix=API_PREFIX)
+    app.include_router(account_router, prefix=API_PREFIX)
 
     @app.exception_handler(HTTPException)
     async def handle_http_error(request: Request, error: HTTPException) -> JSONResponse:

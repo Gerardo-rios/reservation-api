@@ -27,7 +27,7 @@ class AccountMySQLRepository(AccountRepositoryInterface):
         user: str,
         photo: str,
         status: bool,
-        rol_id: str,
+        role_id: str,
         person_id: str,
     ) -> Optional[Account]:
         new_account = AccountDBModel(
@@ -37,7 +37,7 @@ class AccountMySQLRepository(AccountRepositoryInterface):
             username=user,
             photo=photo,
             status=status,
-            rol_id=rol_id,
+            role_id=role_id,
             person_id=person_id,
         )
         try:
@@ -70,7 +70,7 @@ class AccountMySQLRepository(AccountRepositoryInterface):
             user=account.user,
             photo=account.photo,
             status=account.status,
-            rol_id="",
+            role_id="",
             person_id="",
         )
         result = (
