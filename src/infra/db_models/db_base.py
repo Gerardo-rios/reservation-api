@@ -1,9 +1,9 @@
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.orm import sessionmaker, scoped_session, DeclarativeBase
 from sqlalchemy import create_engine
-from config import config
+from configs import config
 
 
-class DbBase:
+class DbBase(DeclarativeBase):  # type: ignore
     """Base class for database models."""
 
 

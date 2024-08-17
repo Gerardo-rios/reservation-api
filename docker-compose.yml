@@ -8,6 +8,8 @@ services:
     restart: unless-stopped
     depends_on:
       - mysql
+    volumes:
+      - .:/app
   
   mysql:
     image: mysql:8.0
@@ -21,4 +23,3 @@ services:
       MYSQL_PASSWORD: password
     volumes:
       - ./db/mysql/mysql-data:/var/lib/mysql
-      - ./db/mysql/mysql-init:/docker-entrypoint-initdb.d
