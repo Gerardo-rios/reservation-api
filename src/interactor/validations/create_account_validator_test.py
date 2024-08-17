@@ -16,7 +16,7 @@ def test_data(
     return {
         **fixture_account_data,
         "role_id": str(fixture_role_data["role_id"]),
-        "person_id": str(fixture_person_data["person_id"]),
+        "person": fixture_person_data,
     }
 
 
@@ -26,7 +26,6 @@ def test_create_account_input_dto_validator(
     mocker.patch(
         "src.interactor.validations.base_input_validator.BaseInputValidator.verify"
     )
-    input_data = test_data
     schema = {
         "email": {
             "type": "string",
@@ -51,11 +50,12 @@ def test_create_account_input_dto_validator(
         },
         "photo": {"type": "string", "required": False, "empty": True},
         "role_id": {"type": "string", "required": True, "empty": False},
-        "person_id": {"type": "string", "required": True, "empty": False},
+        "person": {"type": "dict", "required": True, "empty": False},
     }
-    validator = CreateAccountInputDtoValidator(input_data)
+    validator = CreateAccountInputDtoValidator(test_data)
     validator.validate()
-    validator.verify.assert_called_once_with(schema)
+    validator.verify.assert_any_call(schema)
+    validator.verify.call_count == 2
 
 
 def test_create_account_input_dto_validator_with_invalid_email(

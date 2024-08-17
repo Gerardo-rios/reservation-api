@@ -7,7 +7,6 @@ from src.interactor import FieldValueNotPermittedException
 
 @pytest.fixture
 def test_data(fixture_person_data: Dict[str, str]) -> Dict[str, str]:
-    del fixture_person_data["person_id"]
     return fixture_person_data
 
 
@@ -19,6 +18,13 @@ def test_create_person_input_dto_validator(
     )
     input_data = test_data
     schema = {
+        "person_id": {
+            "type": "string",
+            "minlength": 36,
+            "maxlength": 36,
+            "required": True,
+            "empty": False,
+        },
         "name": {
             "type": "string",
             "minlength": 2,

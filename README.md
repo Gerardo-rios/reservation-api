@@ -47,7 +47,6 @@ If you don't have Make installed, you can use `docker-compose build` and `docker
 4. Migrate the database:
 
 ```bash
-make alembic-autogenerate MESSAGE="Initial migration"
 make alembic-upgrade
 ```
 

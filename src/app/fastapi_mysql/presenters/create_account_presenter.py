@@ -7,9 +7,8 @@ class CreateAccountPresenter(CreateAccountPresenterInterface):
         return {
             "account_id": response.account.account_id,
             "email": response.account.email,
-            "user": response.account.user,
-            "photo": response.account.photo,
-            "status": response.account.status,
-            "person_id": response.person_id,
+            "person_id": response.person.person_id,
+            "person_name": response.person.name,
             "role_id": response.role_id,
+            "message": "Account created successfully",
         }

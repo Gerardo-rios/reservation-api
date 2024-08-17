@@ -1,9 +1,9 @@
 from typing import Optional
 import uuid
 from sqlalchemy.exc import IntegrityError
-from src.domain import Account
+from src.domain import Account, Person
 from src.interactor import AccountRepositoryInterface, UniqueViolationError
-from src.infra import Session, AccountDBModel
+from src.infra import Session, AccountDBModel, PersonDBModel
 
 
 class AccountMySQLRepository(AccountRepositoryInterface):
@@ -28,8 +28,17 @@ class AccountMySQLRepository(AccountRepositoryInterface):
         photo: str,
         status: bool,
         role_id: str,
-        person_id: str,
+        person: Person,
     ) -> Optional[Account]:
+        new_person = PersonDBModel(
+            person_id=person.person_id,
+            name=person.name,
+            phone=person.phone,
+            address=person.address,
+            city=person.city,
+            country=person.country,
+        )
+
         new_account = AccountDBModel(
             account_id=uuid.uuid4(),
             email=email,
@@ -38,14 +47,18 @@ class AccountMySQLRepository(AccountRepositoryInterface):
             photo=photo,
             status=status,
             role_id=role_id,
-            person_id=person_id,
+            person_id=new_person.person_id,
         )
+
         try:
+            self.__session.add(new_person)
             self.__session.add(new_account)
             self.__session.commit()
             self.__session.refresh(new_account)
-        except IntegrityError:
+        except IntegrityError as e:
             self.__session.rollback()
+            if "phone" in str(e.orig):
+                raise UniqueViolationError("Phone number already exists")
             raise UniqueViolationError("Account email already exists")
 
         if new_account is not None:
@@ -67,7 +80,7 @@ class AccountMySQLRepository(AccountRepositoryInterface):
             account_id=account.account_id,
             email=account.email,
             password=account.password,
-            user=account.user,
+            username=account.user,
             photo=account.photo,
             status=account.status,
             role_id="",

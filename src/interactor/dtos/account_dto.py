@@ -1,6 +1,6 @@
 from dataclasses import dataclass, asdict
 from typing import Dict, Any
-from src.domain import Account
+from src.domain import Account, Person
 
 
 @dataclass
@@ -10,7 +10,7 @@ class CreateAccountInputDto:
     user: str
     photo: str
     role_id: str
-    person_id: str
+    person: Person
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -19,5 +19,5 @@ class CreateAccountInputDto:
 @dataclass
 class CreateAccountOutputDto:
     account: Account
+    person: Person
     role_id: str
-    person_id: str

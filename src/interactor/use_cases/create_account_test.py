@@ -1,7 +1,7 @@
 import pytest
-from typing import Any, Dict, Callable
+from typing import Any, Dict, Callable, Optional
 from pytest_mock import MockFixture
-from src.domain import Account
+from src.domain import Account, Person
 from src.interactor import (
     CreateAccountInputDto,
     CreateAccountOutputDto,
@@ -14,11 +14,17 @@ from src.interactor import (
 
 @pytest.fixture
 def dependencies_factory(mocker: MockFixture) -> Callable[[Account], Dict[str, Any]]:
-    def _factory(account: Account) -> Dict[str, Any]:
+    def _factory(
+        account: Account, person: Optional[Person], rol_id: Optional[str]
+    ) -> Dict[str, Any]:
         account_repository_mock = mocker.Mock(AccountRepositoryInterface)
         account_repository_mock.create.return_value = account
         presenter_mock = mocker.Mock(CreateAccountPresenterInterface)
-        presenter_mock.present.return_value = {"account": account.to_dict()}
+        presenter_mock.present.return_value = {
+            "account": account.to_dict(),
+            "role_id": rol_id,
+            "person": person.to_dict(),
+        }
         return {
             "account_repository": account_repository_mock,
             "presenter": presenter_mock,
@@ -35,7 +41,10 @@ def test_create_account(
     dependencies_factory: Callable[[Account], Dict[str, Any]],
 ) -> None:
     account = Account(**fixture_account_data)
-    dependencies = dependencies_factory(account)
+    person = Person(**fixture_person_data)
+    dependencies = dependencies_factory(
+        account=account, person=person, rol_id=str(fixture_role_data["role_id"])
+    )
     input_dto_validator_mock = mocker.patch(
         "src.interactor.use_cases.create_account.CreateAccountInputDtoValidator"
     )
@@ -47,10 +56,10 @@ def test_create_account(
         user=account.user,
         photo=account.photo,
         role_id=fixture_role_data["role_id"],
-        person_id=fixture_person_data["person_id"],
+        person=person,
     )
     output_dto = CreateAccountOutputDto(
-        account, fixture_role_data["role_id"], fixture_person_data["person_id"]
+        account=account, person=person, role_id=fixture_role_data["role_id"]
     )
     response = use_case.execute(input_dto)
 
@@ -58,7 +67,11 @@ def test_create_account(
     input_dto_validator_mock.assert_called_once_with(input_dto.to_dict())
     input_dto_validator_instance.validate.assert_called_once_with()
     dependencies["presenter"].present.assert_called_once_with(output_dto)
-    assert response == {"account": account.to_dict()}
+    assert response == {
+        "account": account.to_dict(),
+        "role_id": str(fixture_role_data["role_id"]),
+        "person": person.to_dict(),
+    }
 
 
 def test_create_account_with_a_none_return_value_from_repository(
@@ -69,7 +82,10 @@ def test_create_account_with_a_none_return_value_from_repository(
     dependencies_factory: Callable[[Account], Dict[str, Any]],
 ) -> None:
     account = Account(**fixture_account_data)
-    dependencies = dependencies_factory(account)
+    person = Person(**fixture_person_data)
+    dependencies = dependencies_factory(
+        account=account, person=person, rol_id=str(fixture_role_data["role_id"])
+    )
     dependencies["account_repository"].create.return_value = None
     use_case = CreateAccountUseCase(**dependencies)
     input_dto = CreateAccountInputDto(
@@ -78,7 +94,7 @@ def test_create_account_with_a_none_return_value_from_repository(
         user=account.user,
         photo=account.photo,
         role_id=str(fixture_role_data["role_id"]),
-        person_id=str(fixture_person_data["person_id"]),
+        person=person,
     )
     with pytest.raises(ItemNotCreatedException) as exc_info:
         use_case.execute(input_dto)
@@ -94,7 +110,10 @@ def test_create_account_with_an_empty_field(
     dependencies_factory: Callable[[Account], Dict[str, Any]],
 ) -> None:
     account = Account(**fixture_account_data)
-    dependencies = dependencies_factory(account)
+    person = Person(**fixture_person_data)
+    dependencies = dependencies_factory(
+        account=account, person=person, rol_id=str(fixture_role_data["role_id"])
+    )
     use_case = CreateAccountUseCase(**dependencies)
     input_dto = CreateAccountInputDto(
         email=account.email,
@@ -102,7 +121,7 @@ def test_create_account_with_an_empty_field(
         user="",
         photo=account.photo,
         role_id=str(fixture_role_data["role_id"]),
-        person_id=str(fixture_person_data["person_id"]),
+        person=person,
     )
     with pytest.raises(ValueError) as exc_info:
         use_case.execute(input_dto)

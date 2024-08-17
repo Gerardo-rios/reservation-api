@@ -32,13 +32,13 @@ class CreateAccountUseCase:
             photo=input_dto.photo,
             status=True,
             role_id=input_dto.role_id,
-            person_id=input_dto.person_id,
+            person=input_dto.person,
         )
         if account is None:
             raise ItemNotCreatedException(input_dto.email, "account")
 
         output_dto = CreateAccountOutputDto(
-            account, input_dto.role_id, input_dto.person_id
+            account=account, role_id=input_dto.role_id, person=input_dto.person
         )
         presenter_response = self.presenter.present(output_dto)
         return presenter_response

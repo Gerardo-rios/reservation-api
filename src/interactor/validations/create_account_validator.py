@@ -1,6 +1,6 @@
 import re
 from typing import Dict
-from . import BaseInputValidator
+from . import BaseInputValidator, CreatePersonInputDtoValidator
 from src.interactor import EmailFormatException, PasswordFormatException
 
 
@@ -32,13 +32,14 @@ class CreateAccountInputDtoValidator(BaseInputValidator):
             },
             "photo": {"type": "string", "required": False, "empty": True},
             "role_id": {"type": "string", "required": True, "empty": False},
-            "person_id": {"type": "string", "required": True, "empty": False},
+            "person": {"type": "dict", "required": True, "empty": False},
         }
 
     def validate(self) -> None:
         super().verify(self.__schema)
         self.__validate_email()
         self.__validate_password()
+        self.__validate_person()
 
     def __validate_email(self) -> None:
         email = self.data["email"]
@@ -50,3 +51,8 @@ class CreateAccountInputDtoValidator(BaseInputValidator):
         pattern = r"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z\d!@#$%^&*(),.?\":{}|<>]{8,}$"  # noqa
         if not re.match(pattern, password):
             raise PasswordFormatException(password)
+
+    def __validate_person(self) -> None:
+        person_data = self.data["person"]
+        person_validator = CreatePersonInputDtoValidator(person_data)
+        person_validator.validate()

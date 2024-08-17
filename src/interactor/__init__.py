@@ -1,6 +1,4 @@
 from .dtos import (
-    CreatePersonInputDto,
-    CreatePersonOutputDto,
     CreateAccountInputDto,
     CreateAccountOutputDto,
     GetRoleInputDto,
@@ -9,8 +7,6 @@ from .dtos import (
 from .interfaces import (
     AccountRepositoryInterface,
     CreateAccountPresenterInterface,
-    CreatePersonPresenterInterface,
-    PersonRepositoryInterface,
     RoleRepositoryInterface,
     GetRolePresenterInterface,
 )
@@ -28,7 +24,6 @@ from .validations import (
     CreateAccountInputDtoValidator,
 )
 from .use_cases import (
-    CreatePersonUseCase,
     CreateAccountUseCase,
     GetRoleUseCase,
 )

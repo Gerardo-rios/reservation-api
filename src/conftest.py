@@ -10,8 +10,8 @@ def fixture_person_data() -> Dict[str, Any]:
         "name": "John Doe",
         "phone": "1234567890",
         "address": "1234 Elm St",
-        "city": "Loja",
-        "country": "Ecuador",
+        "city": "loja",
+        "country": "ecuador",
     }
 
 

@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 
 class AccountControllerInterface(ABC):
     @abstractmethod
-    def create_account_info(self, json_input_data: Dict[str, Any]) -> None:
+    def create_account_request_data(self, json_input_data: Dict[str, Any]) -> None:
         pass
 
     @abstractmethod

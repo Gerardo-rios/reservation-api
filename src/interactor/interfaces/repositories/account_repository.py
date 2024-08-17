@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Optional
-from src.domain import Account
+from src.domain import Account, Person
 
 
 class AccountRepositoryInterface(ABC):
@@ -13,7 +13,7 @@ class AccountRepositoryInterface(ABC):
         photo: str,
         status: bool,
         role_id: str,
-        person_id: str,
+        person: Person,
     ) -> Optional[Account]:
         pass
 
