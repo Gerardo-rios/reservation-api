@@ -1,15 +1,16 @@
+from typing import Any, Callable, Dict, Optional
+
 import pytest
-from typing import Any, Dict, Callable, Optional
 from pytest_mock import MockFixture
+
 from src.domain import Account, Person
-from src.interactor import (
-    CreateAccountInputDto,
-    CreateAccountOutputDto,
-    CreateAccountPresenterInterface,
+from src.interactor.dtos import CreateAccountInputDto, CreateAccountOutputDto
+from src.interactor.errors import ItemNotCreatedException
+from src.interactor.interfaces import (
     AccountRepositoryInterface,
-    ItemNotCreatedException,
-    CreateAccountUseCase,
+    CreateAccountPresenterInterface,
 )
+from src.interactor.use_cases import CreateAccountUseCase
 
 
 @pytest.fixture
@@ -23,14 +24,14 @@ def dependencies_factory(mocker: MockFixture) -> Callable[[Account], Dict[str, A
         presenter_mock.present.return_value = {
             "account": account.to_dict(),
             "role_id": rol_id,
-            "person": person.to_dict(),
+            "person": person.to_dict(),  # type: ignore
         }
         return {
             "account_repository": account_repository_mock,
             "presenter": presenter_mock,
         }
 
-    return _factory
+    return _factory  # type: ignore
 
 
 def test_create_account(
@@ -42,7 +43,7 @@ def test_create_account(
 ) -> None:
     account = Account(**fixture_account_data)
     person = Person(**fixture_person_data)
-    dependencies = dependencies_factory(
+    dependencies = dependencies_factory(  # type: ignore
         account=account, person=person, rol_id=str(fixture_role_data["role_id"])
     )
     input_dto_validator_mock = mocker.patch(
@@ -83,7 +84,7 @@ def test_create_account_with_a_none_return_value_from_repository(
 ) -> None:
     account = Account(**fixture_account_data)
     person = Person(**fixture_person_data)
-    dependencies = dependencies_factory(
+    dependencies = dependencies_factory(  # type: ignore
         account=account, person=person, rol_id=str(fixture_role_data["role_id"])
     )
     dependencies["account_repository"].create.return_value = None
@@ -111,7 +112,7 @@ def test_create_account_with_an_empty_field(
 ) -> None:
     account = Account(**fixture_account_data)
     person = Person(**fixture_person_data)
-    dependencies = dependencies_factory(
+    dependencies = dependencies_factory(  # type: ignore
         account=account, person=person, rol_id=str(fixture_role_data["role_id"])
     )
     use_case = CreateAccountUseCase(**dependencies)

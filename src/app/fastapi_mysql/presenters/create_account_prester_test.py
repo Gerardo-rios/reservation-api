@@ -1,6 +1,8 @@
 from typing import Any, Dict
-from src.interactor import CreateAccountOutputDto
+
 from src.domain import Account, Person
+from src.interactor.dtos import CreateAccountOutputDto
+
 from . import CreateAccountPresenter
 
 

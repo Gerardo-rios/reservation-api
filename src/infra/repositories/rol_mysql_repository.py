@@ -1,7 +1,8 @@
 from typing import Optional
+
 from src.domain import Role
-from src.interactor import RoleRepositoryInterface
-from src.infra import Session, RolDBModel
+from src.infra import RolDBModel, Session
+from src.interactor.interfaces import RoleRepositoryInterface
 
 
 class RolMySQLRepository(RoleRepositoryInterface):

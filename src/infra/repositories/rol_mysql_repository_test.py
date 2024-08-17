@@ -1,9 +1,12 @@
-import pytest
+from typing import Any, Dict
 from unittest.mock import Mock
+
+import pytest
 from pytest_mock import MockerFixture
-from typing import Dict, Any
-from src.infra import RolDBModel
+
 from src.domain import Role
+from src.infra import RolDBModel
+
 from . import RolMySQLRepository
 
 

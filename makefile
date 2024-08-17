@@ -1,4 +1,4 @@
-.PHONY: build up down logs shell test clean format db-rebuild mysql-cli db-dump db-restore check-python-version init
+.PHONY: build up down logs shell test clean format db-rebuild mysql-cli db-dump db-restore check-python-version init isort
 
 COMPOSE_FILE := docker-compose.yml
 
@@ -26,7 +26,10 @@ clean:
 restart: down build up
 
 format:
-	flake8 src/ --exclude __init__.py && mypy src && black src
+	flake8 src/ --exclude __init__.py && mypy src && black src && isort **/*.py
+
+isort:
+	isort **/*.py
 
 db-rebuild:
 	docker compose exec mysql mysql -u$(DB_USER) -p$(DB_PASSWORD) -e "DROP DATABASE IF EXISTS fields_app_db; CREATE DATABASE fields_app_db;"

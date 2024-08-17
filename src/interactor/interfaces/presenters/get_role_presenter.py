@@ -1,6 +1,7 @@
-from typing import Any, Dict
 from abc import ABC, abstractmethod
-from src.interactor import GetRoleOutputDto
+from typing import Any, Dict
+
+from src.interactor.dtos import GetRoleOutputDto
 
 
 class GetRolePresenterInterface(ABC):

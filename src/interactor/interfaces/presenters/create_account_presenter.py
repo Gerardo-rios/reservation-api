@@ -1,6 +1,7 @@
-from typing import Any, Dict
 from abc import ABC, abstractmethod
-from src.interactor import CreateAccountOutputDto
+from typing import Any, Dict
+
+from src.interactor.dtos import CreateAccountOutputDto
 
 
 class CreateAccountPresenterInterface(ABC):

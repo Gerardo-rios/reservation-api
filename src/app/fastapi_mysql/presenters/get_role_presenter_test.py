@@ -1,6 +1,8 @@
 from typing import Any, Dict
-from src.interactor import GetRoleOutputDto
+
 from src.domain import Role
+from src.interactor.dtos import GetRoleOutputDto
+
 from . import GetRolePresenter
 
 

@@ -1,2 +1,2 @@
-from .db_models import Session, DbBase, AccountDBModel, RolDBModel, PersonDBModel
+from .db_models import AccountDBModel, DbBase, PersonDBModel, RolDBModel, Session
 from .repositories import AccountMySQLRepository, RolMySQLRepository

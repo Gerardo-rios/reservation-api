@@ -1,8 +1,11 @@
 from typing import Dict
-from pytest_mock import MockFixture
+
 import pytest
+from pytest_mock import MockFixture
+
+from src.interactor.errors import FieldValueNotPermittedException
+
 from . import CreatePersonInputDtoValidator
-from src.interactor import FieldValueNotPermittedException
 
 
 @pytest.fixture

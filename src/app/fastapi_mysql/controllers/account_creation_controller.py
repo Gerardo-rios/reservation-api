@@ -1,18 +1,12 @@
 import uuid
 from typing import Any, Dict
-from src.interactor import (
-    CreateAccountUseCase,
-    CreateAccountInputDto,
-    GetRoleUseCase,
-    GetRoleInputDto,
-)
+
+from src.app.fastapi_mysql.interfaces import AccountControllerInterface
+from src.app.fastapi_mysql.presenters import CreateAccountPresenter, GetRolePresenter
 from src.domain import Person
 from src.infra import AccountMySQLRepository, RolMySQLRepository
-from src.app.fastapi_mysql.interfaces import AccountControllerInterface
-from src.app.fastapi_mysql.presenters import (
-    CreateAccountPresenter,
-    GetRolePresenter,
-)
+from src.interactor.dtos import CreateAccountInputDto, GetRoleInputDto
+from src.interactor.use_cases import CreateAccountUseCase, GetRoleUseCase
 
 
 class CreateAccountController(AccountControllerInterface):

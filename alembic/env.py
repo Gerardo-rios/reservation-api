@@ -1,18 +1,11 @@
-from src.infra import DbBase
-from configs import config as app_config
-
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from sqlalchemy import engine_from_config, pool
 
 from alembic import context
-
-from src.infra.db_models import (
-    RolDBModel,
-    AccountDBModel,
-    PersonDBModel,
-)
+from configs import config as app_config
+from src.infra import DbBase
+from src.infra.db_models import AccountDBModel, PersonDBModel, RolDBModel
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

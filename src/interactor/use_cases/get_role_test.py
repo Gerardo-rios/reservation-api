@@ -1,15 +1,13 @@
-from typing import Any, Dict, Callable, Optional
+from typing import Any, Callable, Dict, Optional
+
 import pytest
 from pytest_mock import MockFixture
+
 from src.domain import Role
-from src.interactor import (
-    GetRoleUseCase,
-    GetRoleInputDto,
-    GetRoleOutputDto,
-    ItemNotFoundException,
-    GetRolePresenterInterface,
-    RoleRepositoryInterface,
-)
+from src.interactor.dtos import GetRoleInputDto, GetRoleOutputDto
+from src.interactor.errors import ItemNotFoundException
+from src.interactor.interfaces import GetRolePresenterInterface, RoleRepositoryInterface
+from src.interactor.use_cases import GetRoleUseCase
 
 
 @pytest.fixture
