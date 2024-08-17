@@ -8,7 +8,7 @@ from sqlalchemy.exc import IntegrityError
 
 from src.domain import Account, Person
 from src.infra import AccountDBModel, PersonDBModel
-from src.interactor import UniqueViolationError
+from src.interactor.errors import UniqueViolationError
 
 from . import AccountMySQLRepository
 

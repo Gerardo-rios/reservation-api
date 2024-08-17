@@ -3,7 +3,7 @@ from typing import Any, Dict
 import pytest
 from pytest_mock import MockFixture
 
-from src.interactor import EmailFormatException, PasswordFormatException
+from src.interactor.errors import EmailFormatException, PasswordFormatException
 
 from . import CreateAccountInputDtoValidator
 

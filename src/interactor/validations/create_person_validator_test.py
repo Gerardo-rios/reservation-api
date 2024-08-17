@@ -3,7 +3,7 @@ from typing import Dict
 import pytest
 from pytest_mock import MockFixture
 
-from src.interactor import FieldValueNotPermittedException
+from src.interactor.errors import FieldValueNotPermittedException
 
 from . import CreatePersonInputDtoValidator
 

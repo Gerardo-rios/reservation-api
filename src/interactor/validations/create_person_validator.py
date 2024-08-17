@@ -1,6 +1,6 @@
 from typing import Dict
 
-from src.interactor import FieldValueNotPermittedException
+from src.interactor.errors import FieldValueNotPermittedException
 
 from . import BaseInputValidator
 

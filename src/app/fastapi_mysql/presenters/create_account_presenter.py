@@ -1,6 +1,7 @@
 from typing import Any, Dict
 
-from src.interactor import CreateAccountOutputDto, CreateAccountPresenterInterface
+from src.interactor.dtos import CreateAccountOutputDto
+from src.interactor.interfaces import CreateAccountPresenterInterface
 
 
 class CreateAccountPresenter(CreateAccountPresenterInterface):

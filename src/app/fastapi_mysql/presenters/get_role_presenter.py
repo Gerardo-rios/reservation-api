@@ -1,6 +1,7 @@
 from typing import Any, Dict
 
-from src.interactor import GetRoleOutputDto, GetRolePresenterInterface
+from src.interactor.dtos import GetRoleOutputDto
+from src.interactor.interfaces import GetRolePresenterInterface
 
 
 class GetRolePresenter(GetRolePresenterInterface):

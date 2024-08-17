@@ -3,9 +3,8 @@ from typing import Any, Dict
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
-from src import Session as DbSession
-
-from . import account_router
+from src.app.fastapi_mysql.routes import account_router
+from src.infra.db_models.db_base import Session as DbSession
 
 API_PREFIX = "/api/v1"
 
