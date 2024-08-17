@@ -1,10 +1,11 @@
 from typing import Any, Dict
-from fastapi import FastAPI, Request, HTTPException
+
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
-from . import account_router
 from src import Session as DbSession
 
+from . import account_router
 
 API_PREFIX = "/api/v1"
 

@@ -4,26 +4,23 @@ from .dtos import (
     GetRoleInputDto,
     GetRoleOutputDto,
 )
+from .errors import (
+    EmailFormatException,
+    FieldValueNotPermittedException,
+    ItemNotCreatedException,
+    ItemNotFoundException,
+    PasswordFormatException,
+    UniqueViolationError,
+)
 from .interfaces import (
     AccountRepositoryInterface,
     CreateAccountPresenterInterface,
-    RoleRepositoryInterface,
     GetRolePresenterInterface,
+    RoleRepositoryInterface,
 )
-from .errors import (
-    FieldValueNotPermittedException,
-    ItemNotCreatedException,
-    EmailFormatException,
-    PasswordFormatException,
-    ItemNotFoundException,
-    UniqueViolationError,
-)
+from .use_cases import CreateAccountUseCase, GetRoleUseCase
 from .validations import (
     BaseInputValidator,
-    CreatePersonInputDtoValidator,
     CreateAccountInputDtoValidator,
-)
-from .use_cases import (
-    CreateAccountUseCase,
-    GetRoleUseCase,
+    CreatePersonInputDtoValidator,
 )

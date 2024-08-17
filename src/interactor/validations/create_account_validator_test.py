@@ -1,8 +1,11 @@
-import pytest
 from typing import Any, Dict
+
+import pytest
 from pytest_mock import MockFixture
-from . import CreateAccountInputDtoValidator
+
 from src.interactor import EmailFormatException, PasswordFormatException
+
+from . import CreateAccountInputDtoValidator
 
 
 @pytest.fixture

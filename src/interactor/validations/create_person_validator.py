@@ -1,6 +1,8 @@
 from typing import Dict
-from . import BaseInputValidator
+
 from src.interactor import FieldValueNotPermittedException
+
+from . import BaseInputValidator
 
 
 class CreatePersonInputDtoValidator(BaseInputValidator):

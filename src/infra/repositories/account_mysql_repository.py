@@ -1,9 +1,11 @@
-from typing import Optional
 import uuid
+from typing import Optional
+
 from sqlalchemy.exc import IntegrityError
+
 from src.domain import Account, Person
+from src.infra import AccountDBModel, PersonDBModel, Session
 from src.interactor import AccountRepositoryInterface, UniqueViolationError
-from src.infra import Session, AccountDBModel, PersonDBModel
 
 
 class AccountMySQLRepository(AccountRepositoryInterface):

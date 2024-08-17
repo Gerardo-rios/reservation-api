@@ -1,9 +1,10 @@
 from typing import Any, Dict
+
 from src.interactor import (
     GetRoleInputDto,
     GetRoleOutputDto,
-    ItemNotFoundException,
     GetRolePresenterInterface,
+    ItemNotFoundException,
     RoleRepositoryInterface,
 )
 

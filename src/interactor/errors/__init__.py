@@ -1,7 +1,7 @@
 from .creation_errors import (
-    ItemNotCreatedException,
-    FieldValueNotPermittedException,
     EmailFormatException,
+    FieldValueNotPermittedException,
+    ItemNotCreatedException,
     PasswordFormatException,
     UniqueViolationError,
 )

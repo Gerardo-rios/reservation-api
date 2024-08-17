@@ -1,12 +1,15 @@
-import pytest
-from unittest.mock import Mock
-from pytest_mock import MockerFixture
 import uuid
-from typing import Dict, Any
-from src.infra import AccountDBModel, PersonDBModel
-from src.domain import Account, Person
-from src.interactor import UniqueViolationError
+from typing import Any, Dict
+from unittest.mock import Mock
+
+import pytest
+from pytest_mock import MockerFixture
 from sqlalchemy.exc import IntegrityError
+
+from src.domain import Account, Person
+from src.infra import AccountDBModel, PersonDBModel
+from src.interactor import UniqueViolationError
+
 from . import AccountMySQLRepository
 
 
@@ -44,8 +47,8 @@ def test_setup(mocker: MockerFixture) -> Dict[str, Any]:
         },
     }
 
-    mock_account_db_model.return_value = AccountDBModel(**test_data["new_account"])
-    mock_person_db_model.return_value = PersonDBModel(**test_data["new_person"])
+    mock_account_db_model.return_value = AccountDBModel(**test_data["new_account"])  # type: ignore  # noqa
+    mock_person_db_model.return_value = PersonDBModel(**test_data["new_person"])  # type: ignore  # noqa
 
     mocker.patch(
         "src.infra.repositories.account_mysql_repository.Session",

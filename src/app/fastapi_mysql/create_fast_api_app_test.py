@@ -1,8 +1,10 @@
 from typing import Dict
-from fastapi.testclient import TestClient
-from fastapi import HTTPException, Request
-from src.app.fastapi_mysql.create_fast_api_app import create_fastapi_app, get_db
 from unittest.mock import Mock
+
+from fastapi import HTTPException, Request
+from fastapi.testclient import TestClient
+
+from src.app.fastapi_mysql.create_fast_api_app import create_fastapi_app, get_db
 
 app = create_fastapi_app()
 client = TestClient(app)

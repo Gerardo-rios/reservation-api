@@ -1,11 +1,13 @@
-import bcrypt
 from typing import Any, Dict
+
+import bcrypt
+
 from src.interactor import (
+    AccountRepositoryInterface,
     CreateAccountInputDto,
+    CreateAccountInputDtoValidator,
     CreateAccountOutputDto,
     CreateAccountPresenterInterface,
-    AccountRepositoryInterface,
-    CreateAccountInputDtoValidator,
     ItemNotCreatedException,
 )
 

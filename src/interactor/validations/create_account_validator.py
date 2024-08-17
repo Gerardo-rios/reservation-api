@@ -1,7 +1,9 @@
 import re
 from typing import Any, Dict
-from . import BaseInputValidator, CreatePersonInputDtoValidator
+
 from src.interactor import EmailFormatException, PasswordFormatException
+
+from . import BaseInputValidator, CreatePersonInputDtoValidator
 
 
 class CreateAccountInputDtoValidator(BaseInputValidator):

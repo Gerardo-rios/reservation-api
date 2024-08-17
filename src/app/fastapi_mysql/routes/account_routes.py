@@ -1,10 +1,12 @@
-from fastapi import APIRouter, Depends
 from typing import Dict
+
+from fastapi import APIRouter, Depends
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
+
 from src.app.fastapi_mysql.controllers.account_creation_controller import (
     CreateAccountController,
 )
-from fastapi.responses import JSONResponse
-from fastapi.encoders import jsonable_encoder
 
 account_router = APIRouter()
 
