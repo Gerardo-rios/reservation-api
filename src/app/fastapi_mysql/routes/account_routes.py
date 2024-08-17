@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends
 from typing import Dict
 from src.app.fastapi_mysql.controllers.account_creation_controller import (
     CreateAccountController,
@@ -9,7 +9,7 @@ from fastapi.encoders import jsonable_encoder
 account_router = APIRouter()
 
 
-@account_router.post("/account/create", status_code=status.HTTP_201_CREATED)
+@account_router.post("/account/create", status_code=201)
 async def create_account(
     json_input_data: Dict[str, str],
     controller: CreateAccountController = Depends(CreateAccountController),

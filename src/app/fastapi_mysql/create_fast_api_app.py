@@ -20,7 +20,7 @@ def format_error_response(error: Exception, error_code: int) -> Dict[str, Any]:
 
 def create_fastapi_app() -> FastAPI:
     app = FastAPI()
-
+    app.title = "Reservations API"
     app.include_router(account_router, prefix=API_PREFIX)
 
     @app.exception_handler(HTTPException)

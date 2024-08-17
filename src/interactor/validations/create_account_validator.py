@@ -1,11 +1,11 @@
 import re
-from typing import Dict
+from typing import Any, Dict
 from . import BaseInputValidator, CreatePersonInputDtoValidator
 from src.interactor import EmailFormatException, PasswordFormatException
 
 
 class CreateAccountInputDtoValidator(BaseInputValidator):
-    def __init__(self, data: Dict[str, str]) -> None:
+    def __init__(self, data: Dict[str, Any]) -> None:
         super().__init__(data)
         self.data = data
         self.__schema = {
@@ -54,5 +54,5 @@ class CreateAccountInputDtoValidator(BaseInputValidator):
 
     def __validate_person(self) -> None:
         person_data = self.data["person"]
-        person_validator = CreatePersonInputDtoValidator(person_data)
+        person_validator = CreatePersonInputDtoValidator(person_data)  # type: ignore
         person_validator.validate()
