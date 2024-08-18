@@ -16,7 +16,18 @@ async def create_account(
     json_input_data: Dict[str, str],
     controller: CreateAccountController = Depends(CreateAccountController),
 ) -> JSONResponse:
-    controller.create_account_request_data(json_input_data)
+    controller.create_request_data(json_input_data)
     controller_response = controller.execute()
     json_response = jsonable_encoder(controller_response)
     return JSONResponse(content=json_response)
+
+
+# @account_router.post("/account/login", status_code=200)
+# async def login_account(
+#     json_input_data: Dict[str, str],
+#     controller: LoginAccountController = Depends(LoginAccountController),
+# ) -> JSONResponse:
+#     controller.create_request_data(json_input_data)
+#     controller_response = controller.execute()
+#     json_response = jsonable_encoder(controller_response)
+#     return JSONResponse(content=json_response)
