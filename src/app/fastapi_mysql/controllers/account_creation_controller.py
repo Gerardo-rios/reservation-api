@@ -8,12 +8,14 @@ from src.infra import AccountMySQLRepository, RolMySQLRepository
 from src.interactor.dtos import CreateAccountInputDto, GetRoleInputDto
 from src.interactor.use_cases import CreateAccountUseCase, GetRoleUseCase
 
+from .controllers_utils import validate_input_keys
+
 
 class CreateAccountController(AccountControllerInterface):
     def __init__(self) -> None:
         self.input_account_dto: CreateAccountInputDto
 
-    def create_account_request_data(self, json_input_data: Dict[str, Any]) -> None:
+    def create_request_data(self, json_input_data: Dict[str, Any]) -> None:
         valid_keys = [
             "name",
             "phone",
@@ -24,20 +26,7 @@ class CreateAccountController(AccountControllerInterface):
             "user",
             "photo",
         ]
-        input_keys = set(json_input_data.keys())
-        valid_keys_set = set(valid_keys)
-
-        missing_keys = valid_keys_set - input_keys
-        invalid_keys = input_keys - valid_keys_set
-
-        if missing_keys or invalid_keys:
-            error_message = []
-            if missing_keys:
-                error_message.append(f"Missing keys: {', '.join(missing_keys)}")
-            if invalid_keys:
-                error_message.append(f"Invalid keys: {', '.join(invalid_keys)}")
-
-            raise ValueError(". ".join(error_message))
+        validate_input_keys(json_input_data, valid_keys)
 
         role_repository = RolMySQLRepository()
         get_role_use_case = GetRoleUseCase(

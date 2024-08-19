@@ -126,7 +126,7 @@ def test_create_account(
     role_input_dto = GetRoleInputDto(role_name=fixture_role_data["role_name"])
 
     controller = CreateAccountController()
-    controller.create_account_request_data(fake_user_inputs)
+    controller.create_request_data(fake_user_inputs)
     result = controller.execute()
 
     mock_role_repository.assert_called_once()
@@ -159,23 +159,23 @@ def test_create_account__when_some_inputs_are_missing(
     controller = CreateAccountController()
     fake_user_inputs.pop("name")
     with pytest.raises(ValueError) as exc_info:
-        controller.create_account_request_data(fake_user_inputs)
+        controller.create_request_data(fake_user_inputs)
     assert str(exc_info.value) == "Missing keys: name"
 
     fake_user_inputs["name"] = fixture_person_data["name"]
     fake_user_inputs.pop("role_name")
     with pytest.raises(ValueError) as exc_info:
-        controller.create_account_request_data(fake_user_inputs)
+        controller.create_request_data(fake_user_inputs)
     assert str(exc_info.value) == "Missing keys: role_name"
 
     fake_user_inputs["role_name"] = fixture_role_data["role_name"]
     fake_user_inputs.pop("email")
     with pytest.raises(ValueError) as exc_info:
-        controller.create_account_request_data(fake_user_inputs)
+        controller.create_request_data(fake_user_inputs)
     assert str(exc_info.value) == "Missing keys: email"
 
     fake_user_inputs["email"] = fixture_account_data["email"]
     fake_user_inputs.pop("password")
     with pytest.raises(ValueError) as exc_info:
-        controller.create_account_request_data(fake_user_inputs)
+        controller.create_request_data(fake_user_inputs)
     assert str(exc_info.value) == "Missing keys: password"

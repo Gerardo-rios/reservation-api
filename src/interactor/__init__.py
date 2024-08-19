@@ -5,6 +5,7 @@ from .dtos import (
     GetRoleOutputDto,
 )
 from .errors import (
+    AuthenticationError,
     EmailFormatException,
     FieldValueNotPermittedException,
     ItemNotCreatedException,
@@ -16,9 +17,11 @@ from .interfaces import (
     AccountRepositoryInterface,
     CreateAccountPresenterInterface,
     GetRolePresenterInterface,
+    LoginPresenterInterface,
+    LoginRepositoryInterface,
     RoleRepositoryInterface,
 )
-from .use_cases import CreateAccountUseCase, GetRoleUseCase
+from .use_cases import CreateAccountUseCase, GetRoleUseCase, LoginUseCase
 from .validations import (
     BaseInputValidator,
     CreateAccountInputDtoValidator,

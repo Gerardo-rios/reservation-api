@@ -5,5 +5,5 @@ from .creation_errors import (
     PasswordFormatException,
     UniqueViolationError,
 )
-from .get_errors import ItemNotFoundException
+from .get_errors import AuthenticationError, ItemNotFoundException
 from .update_errors import ItemNotUpdatedException
