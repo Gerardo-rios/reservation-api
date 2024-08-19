@@ -1,8 +1,10 @@
 from typing import Any, Dict
 
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from configs.config import FRONTEND_DOMAIN
 from src.app.fastapi_mysql.routes import account_router
 from src.infra.db_models.db_base import Session as DbSession
 
@@ -21,6 +23,15 @@ def format_error_response(error: Exception, error_code: int) -> Dict[str, Any]:
 def create_fastapi_app() -> FastAPI:
     app = FastAPI()
     app.title = "Reservations API"
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[FRONTEND_DOMAIN],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
     app.include_router(account_router, prefix=API_PREFIX)
 
     @app.exception_handler(HTTPException)
@@ -29,17 +40,29 @@ def create_fastapi_app() -> FastAPI:
             "error": error.__class__.__name__,
             "message": error.detail,
         }
-        return JSONResponse(status_code=error.status_code, content=response)
+        return JSONResponse(
+            status_code=error.status_code,
+            content=response,
+            headers={"Access-Control-Allow-Origin": FRONTEND_DOMAIN},
+        )
 
     @app.exception_handler(ValueError)
     async def handle_value_error(request: Request, error: ValueError) -> JSONResponse:
-        return JSONResponse(status_code=400, content=format_error_response(error, 400))
+        return JSONResponse(
+            status_code=400,
+            content=format_error_response(error, 400),
+            headers={"Access-Control-Allow-Origin": FRONTEND_DOMAIN},
+        )
 
     @app.exception_handler(Exception)
     async def handle_general_exception(
         request: Request, error: Exception
     ) -> JSONResponse:
-        return JSONResponse(status_code=500, content=format_error_response(error, 500))
+        return JSONResponse(
+            status_code=500,
+            content=format_error_response(error, 500),
+            headers={"Access-Control-Allow-Origin": FRONTEND_DOMAIN},
+        )
 
     @app.middleware("http")
     async def db_session_middleware(request: Request, call_next: Any) -> Any:
