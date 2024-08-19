@@ -4,8 +4,7 @@ from unittest.mock import Mock
 import pytest
 from pytest_mock import MockerFixture
 
-from src.domain import Account, Person, Role
-from src.domain import Session as SessionDomain
+from src.domain import LoginSession
 from src.infra import AccountDBModel, PersonDBModel, RolDBModel
 
 from . import LoginMySQLRepository
@@ -42,12 +41,12 @@ def test_setup(
 
 
 def test_mysql_login_repository_get_existing_account(
-    test_setup: Dict[str, Any]
+    mocker: MockerFixture, test_setup: Dict[str, Any]
 ) -> None:
     repository = test_setup["repository"]
     mock_session = test_setup["mock_session"]
     test_data = test_setup["test_data"]
-
+    mocker.patch("bcrypt.checkpw", return_value=True)
     db_account = AccountDBModel(
         account_id=test_data["account"]["account_id"],
         email=test_data["account"]["email"],
@@ -71,10 +70,23 @@ def test_mysql_login_repository_get_existing_account(
         email=test_data["account"]["email"], password=test_data["account"]["password"]
     )
 
-    assert isinstance(result, SessionDomain)
-    assert result.account == Account(**test_data["account"])
-    assert result.person == Person(**test_data["person"])
-    assert result.role == Role(**test_data["role"])
+    assert isinstance(result, LoginSession)
+    assert result.account == {
+        "account_id": test_data["account"]["account_id"],
+        "email": test_data["account"]["email"],
+        "user": test_data["account"]["user"],
+        "photo": test_data["account"]["photo"],
+    }
+    assert result.person == {
+        "person_id": test_data["person"]["person_id"],
+        "name": test_data["person"]["name"],
+        "phone": test_data["person"]["phone"],
+        "address": test_data["person"]["address"],
+    }
+    assert result.role == {
+        "role_id": test_data["role"]["role_id"],
+        "role_name": test_data["role"]["role_name"],
+    }
 
 
 def test_mysql_login_repository_get_non_existing_role(

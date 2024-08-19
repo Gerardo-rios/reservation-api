@@ -1,8 +1,8 @@
-import uuid
 from typing import Optional
 
-from src.domain import Account, Person, Role
-from src.domain import Session as SessionDomain
+import bcrypt
+
+from src.domain import LoginSession
 from src.infra import AccountDBModel, PersonDBModel, RolDBModel, Session
 from src.interactor.errors import AuthenticationError
 from src.interactor.interfaces import LoginRepositoryInterface
@@ -17,34 +17,31 @@ class LoginMySQLRepository(LoginRepositoryInterface):
         db_row_account: AccountDBModel,
         db_row_person: PersonDBModel,
         db_row_role: RolDBModel,
-    ) -> Optional[SessionDomain]:
-        return SessionDomain(
-            account=Account(
-                account_id=db_row_account.account_id,
-                email=db_row_account.email,
-                password=db_row_account.password,
-                user=db_row_account.username,
-                photo=db_row_account.photo,
-                status=db_row_account.status,
-            ),
-            person=Person(
-                person_id=db_row_person.person_id,
-                name=db_row_person.name,
-                phone=db_row_person.phone,
-                address=db_row_person.address,
-                city=db_row_person.city,
-                country=db_row_person.country,
-            ),
-            role=Role(
-                role_id=db_row_role.role_id,
-                role_name=db_row_role.role_name,
-                description=db_row_role.description,
-            ),
+    ) -> Optional[LoginSession]:
+        return LoginSession(
+            account={
+                "account_id": db_row_account.account_id,
+                "email": db_row_account.email,
+                "user": db_row_account.username,
+                "photo": db_row_account.photo,
+            },
+            person={
+                "person_id": db_row_person.person_id,
+                "name": db_row_person.name,
+                "phone": db_row_person.phone,
+                "address": db_row_person.address,
+            },
+            role={"role_id": db_row_role.role_id, "role_name": db_row_role.role_name},
         )
 
-    def login(self, email: str, password: str) -> Optional[SessionDomain]:
+    def login(self, email: str, password: str) -> Optional[LoginSession]:
         account = self.__session.query(AccountDBModel).filter_by(email=email).first()
-        if account is None or account.password != password:
+        if account is None:
+            return None
+        password_matches = bcrypt.checkpw(
+            password.encode("utf-8"), account.password.encode("utf-8")
+        )
+        if not password_matches:
             return None
         if not account.status:
             raise AuthenticationError("Account is inactive")

@@ -4,7 +4,7 @@ import jwt
 import pytest
 from pytest_mock import MockFixture
 
-from src.domain import Account, Person, Role, Session
+from src.domain import LoginSession
 from src.interactor.dtos import LoginInputDto, LoginOutputDto
 from src.interactor.errors import AuthenticationError
 from src.interactor.interfaces import LoginPresenterInterface, LoginRepositoryInterface
@@ -14,8 +14,8 @@ from src.interactor.use_cases import LoginUseCase
 @pytest.fixture
 def dependencies_factory(
     mocker: MockFixture,
-) -> Callable[[Session], Dict[str, Any]]:
-    def _dependencies_factory(session: Session) -> Dict[str, Any]:
+) -> Callable[[LoginSession], Dict[str, Any]]:
+    def _dependencies_factory(session: LoginSession) -> Dict[str, Any]:
         mocker.patch("jwt.encode", return_value="mocked_jwt_token")
         login_repository_mock = mocker.Mock(LoginRepositoryInterface)
         login_repository_mock.login.return_value = session
@@ -38,12 +38,25 @@ def test_login_use_case(
     fixture_role_data: Dict[str, Any],
     fixture_person_data: Dict[str, Any],
     fixture_account_data: Dict[str, Any],
-    dependencies_factory: Callable[[Session], Dict[str, Any]],
+    dependencies_factory: Callable[[LoginSession], Dict[str, Any]],
 ) -> None:
-    session = Session(
-        account=Account(**fixture_account_data),
-        person=Person(**fixture_person_data),
-        role=Role(**fixture_role_data),
+    session = LoginSession(
+        account={
+            "account_id": fixture_account_data["account_id"],
+            "email": fixture_account_data["email"],
+            "user": fixture_account_data["user"],
+            "photo": fixture_account_data["photo"],
+        },
+        person={
+            "person_id": fixture_person_data["person_id"],
+            "name": fixture_person_data["name"],
+            "phone": fixture_person_data["phone"],
+            "address": fixture_person_data["address"],
+        },
+        role={
+            "role_id": fixture_role_data["role_id"],
+            "role_name": fixture_role_data["role_name"],
+        },
     )
     dependencies = dependencies_factory(session)
     use_case = LoginUseCase(**dependencies)

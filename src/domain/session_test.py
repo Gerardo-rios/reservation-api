@@ -2,96 +2,106 @@ from typing import Any, Dict
 
 import pytest
 
-from . import Account, Person, Role, Session
+from . import LoginSession
+
+
+@pytest.fixture
+def test_data(
+    fixture_account_data: Dict[str, Any],
+    fixture_person_data: Dict[str, Any],
+    fixture_role_data: Dict[str, Any],
+) -> Dict[str, Any]:
+    return {
+        "account": {
+            "account_id": fixture_account_data["account_id"],
+            "email": fixture_account_data["email"],
+            "user": fixture_account_data["user"],
+            "photo": fixture_account_data["photo"],
+        },
+        "person": {
+            "person_id": fixture_person_data["person_id"],
+            "name": fixture_person_data["name"],
+            "phone": fixture_person_data["phone"],
+            "address": fixture_person_data["address"],
+        },
+        "role": {
+            "role_id": fixture_role_data["role_id"],
+            "role_name": fixture_role_data["role_name"],
+        },
+    }
 
 
 def test_session_creation(
-    fixture_account_data: Dict[str, Any],
-    fixture_person_data: Dict[str, Any],
-    fixture_role_data: Dict[str, Any],
+    test_data: Dict[str, Any],
 ) -> None:
-    session = Session(
-        account=Account(**fixture_account_data),
-        person=Person(**fixture_person_data),
-        role=Role(**fixture_role_data),
+    session = LoginSession(
+        account=test_data["account"],
+        person=test_data["person"],
+        role=test_data["role"],
     )
 
-    assert session.account == Account(**fixture_account_data)
-    assert session.person == Person(**fixture_person_data)
-    assert session.role == Role(**fixture_role_data)
+    assert session.account == test_data["account"]
+    assert session.person == test_data["person"]
+    assert session.role == test_data["role"]
 
 
 def test_from_dict(
-    fixture_account_data: Dict[str, Any],
-    fixture_person_data: Dict[str, Any],
-    fixture_role_data: Dict[str, Any],
+    test_data: Dict[str, Any],
 ) -> None:
-    session = Session.from_dict(
-        {
-            "account": fixture_account_data,
-            "person": fixture_person_data,
-            "role": fixture_role_data,
-        }
-    )
+    session = LoginSession.from_dict(test_data)
 
-    assert session.account == fixture_account_data
-    assert session.person == fixture_person_data
-    assert session.role == fixture_role_data
+    assert session.account == test_data["account"]
+    assert session.person == test_data["person"]
+    assert session.role == test_data["role"]
 
 
 def test_to_dict(
-    fixture_account_data: Dict[str, Any],
-    fixture_person_data: Dict[str, Any],
-    fixture_role_data: Dict[str, Any],
+    test_data: Dict[str, Any],
 ) -> None:
-    session = Session(
-        account=Account(**fixture_account_data),
-        person=Person(**fixture_person_data),
-        role=Role(**fixture_role_data),
+    session = LoginSession(
+        account=test_data["account"], person=test_data["person"], role=test_data["role"]
     )
 
     assert session.to_dict() == {
-        "account": fixture_account_data,
-        "person": fixture_person_data,
-        "role": fixture_role_data,
+        "account": test_data["account"],
+        "person": test_data["person"],
+        "role": test_data["role"],
     }
 
 
 def test_session_comparison(
-    fixture_account_data: Dict[str, Any],
-    fixture_person_data: Dict[str, Any],
-    fixture_role_data: Dict[str, Any],
+    test_data: Dict[str, Any],
 ) -> None:
-    session1 = Session(
-        account=Account(**fixture_account_data),
-        person=Person(**fixture_person_data),
-        role=Role(**fixture_role_data),
+    session1 = LoginSession(
+        account=test_data["account"],
+        person=test_data["person"],
+        role=test_data["role"],
     )
-    session2 = Session(
-        account=Account(**fixture_account_data),
-        person=Person(**fixture_person_data),
-        role=Role(**fixture_role_data),
+    session2 = LoginSession(
+        account=test_data["account"],
+        person=test_data["person"],
+        role=test_data["role"],
     )
 
     assert session1 == session2
 
 
 def test_session_inequality(
-    fixture_account_data: Dict[str, Any],
-    fixture_person_data: Dict[str, Any],
-    fixture_role_data: Dict[str, Any],
+    test_data: Dict[str, Any],
 ) -> None:
-    session1 = Session(
-        account=Account(**fixture_account_data),
-        person=Person(**fixture_person_data),
-        role=Role(**fixture_role_data),
+    session1 = LoginSession(
+        account=test_data["account"],
+        person=test_data["person"],
+        role=test_data["role"],
     )
     modified_data = {
-        "account": fixture_account_data,
-        "person": fixture_person_data,
-        "role": fixture_role_data,
+        "account": test_data["account"],
+        "person": test_data["person"],
+        "role": {
+            "role_id": "test_role_id",
+            "role_name": "Different Role",
+        },
     }
-    modified_data["role"]["role_name"] = "Different Role"
-    session2 = Session.from_dict(modified_data)
+    session2 = LoginSession.from_dict(modified_data)
 
     assert session1 != session2

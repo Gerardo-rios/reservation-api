@@ -1,16 +1,15 @@
-import uuid
 from typing import Any, Dict
 
 from src.app.fastapi_mysql.interfaces import AccountControllerInterface
 from src.app.fastapi_mysql.presenters import LoginAccountPresenter
-from src.infra import AccountMySQLRepository
+from src.infra import LoginMySQLRepository
 from src.interactor.dtos import LoginInputDto
 from src.interactor.use_cases import LoginUseCase
 
 from .controllers_utils import validate_input_keys
 
 
-class CreateAccountController(AccountControllerInterface):
+class LoginAccountController(AccountControllerInterface):
     def __init__(self) -> None:
         self.input_login_dto: LoginInputDto
 
@@ -23,7 +22,7 @@ class CreateAccountController(AccountControllerInterface):
         )
 
     def execute(self) -> Dict[str, Any]:
-        repository = AccountMySQLRepository()
+        repository = LoginMySQLRepository()
         presenter = LoginAccountPresenter()
         use_case = LoginUseCase(
             login_repository=repository,

@@ -23,7 +23,7 @@ class LoginUseCase:
         if session is None:
             raise AuthenticationError("Invalid email or password provided")
 
-        token = self.__generate_jwt_session_token(session.account.email)
+        token = self.__generate_jwt_session_token(session.account["email"])
 
         session.token = token
 
@@ -37,5 +37,5 @@ class LoginUseCase:
             "iat": datetime.now(timezone.utc),
             "exp": datetime.now(timezone.utc) + timedelta(minutes=120),
         }
-        token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+        token = str(jwt.encode(payload, SECRET_KEY, algorithm="HS256"))
         return token
