@@ -16,3 +16,6 @@ DB_URI = f"{DB_DRIVER}://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 # Secret key for JWT
 SECRET_KEY = os.getenv("SECRET_KEY")
+
+# CORS
+FRONTEND_DOMAIN = os.getenv("FRONT_END_DOMAIN", "*")
