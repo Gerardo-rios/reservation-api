@@ -10,6 +10,9 @@ from src.interactor.request_models import LoginInputDto, LoginOutputDto
 
 
 class LoginUseCase:
+    TOKEN_EXPIRATION_MINUTES = 120
+    TOKEN_ALGORITHM = "HS256"
+
     def __init__(
         self,
         login_repository: LoginRepositoryInterface,
@@ -35,7 +38,8 @@ class LoginUseCase:
         payload = {
             "sub": email,
             "iat": datetime.now(timezone.utc),
-            "exp": datetime.now(timezone.utc) + timedelta(minutes=120),
+            "exp": datetime.now(timezone.utc)
+            + timedelta(minutes=self.TOKEN_EXPIRATION_MINUTES),
         }
-        token = str(jwt.encode(payload, SECRET_KEY, algorithm="HS256"))
+        token = str(jwt.encode(payload, SECRET_KEY, algorithm=self.TOKEN_ALGORITHM))
         return token
