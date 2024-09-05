@@ -1,7 +1,7 @@
 from typing import Any, Dict
 
 from src.domain import LoginSession
-from src.interactor.dtos import LoginOutputDto
+from src.interactor.request_models import LoginOutputDto
 
 from . import LoginAccountPresenter
 

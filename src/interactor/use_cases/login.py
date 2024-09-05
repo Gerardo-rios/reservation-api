@@ -4,9 +4,9 @@ from typing import Any, Dict
 import jwt
 
 from configs.config import SECRET_KEY
-from src.interactor.dtos import LoginInputDto, LoginOutputDto
 from src.interactor.errors import AuthenticationError
 from src.interactor.interfaces import LoginPresenterInterface, LoginRepositoryInterface
+from src.interactor.request_models import LoginInputDto, LoginOutputDto
 
 
 class LoginUseCase:

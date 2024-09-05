@@ -4,7 +4,7 @@ from unittest import mock
 import pytest
 from pytest import MonkeyPatch
 
-from src.interactor.dtos import LoginInputDto
+from src.interactor.request_models import LoginInputDto
 
 with mock.patch(
     "sqlalchemy.create_engine",

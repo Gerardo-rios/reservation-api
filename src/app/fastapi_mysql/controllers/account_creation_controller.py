@@ -5,7 +5,7 @@ from src.app.fastapi_mysql.interfaces import AccountControllerInterface
 from src.app.fastapi_mysql.presenters import CreateAccountPresenter, GetRolePresenter
 from src.domain import Person
 from src.infra import AccountMySQLRepository, RolMySQLRepository
-from src.interactor.dtos import CreateAccountInputDto, GetRoleInputDto
+from src.interactor.request_models import CreateAccountInputDto, GetRoleInputDto
 from src.interactor.use_cases import CreateAccountUseCase, GetRoleUseCase
 
 from .controllers_utils import validate_input_keys

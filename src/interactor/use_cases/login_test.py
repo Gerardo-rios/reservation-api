@@ -5,9 +5,9 @@ import pytest
 from pytest_mock import MockFixture
 
 from src.domain import LoginSession
-from src.interactor.dtos import LoginInputDto, LoginOutputDto
 from src.interactor.errors import AuthenticationError
 from src.interactor.interfaces import LoginPresenterInterface, LoginRepositoryInterface
+from src.interactor.request_models import LoginInputDto, LoginOutputDto
 from src.interactor.use_cases import LoginUseCase
 
 
