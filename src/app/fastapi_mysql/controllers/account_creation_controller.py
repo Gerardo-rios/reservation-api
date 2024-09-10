@@ -2,7 +2,10 @@ import uuid
 from typing import Any, Dict
 
 from src.app.fastapi_mysql.interfaces import AccountControllerInterface
-from src.app.fastapi_mysql.presenters import CreateAccountPresenter, GetRolePresenter
+from src.app.fastapi_mysql.response_models import (
+    CreateAccountPresenter,
+    GetRolePresenter,
+)
 from src.domain import Person
 from src.infra import AccountMySQLRepository, RolMySQLRepository
 from src.interactor.request_models import CreateAccountInputDto, GetRoleInputDto
