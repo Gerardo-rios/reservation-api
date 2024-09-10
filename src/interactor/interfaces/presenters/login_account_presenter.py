@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from src.interactor.request_models import LoginOutputDto
 
 
 class LoginPresenterInterface(ABC):
     @abstractmethod
-    def present(self, output_dto: LoginOutputDto) -> Dict[str, Any]:
+    def present(
+        self, output_dto: LoginOutputDto, token: Optional[str] = None
+    ) -> Dict[str, Any]:
         pass

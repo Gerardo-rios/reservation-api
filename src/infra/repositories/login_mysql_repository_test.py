@@ -4,8 +4,8 @@ from unittest.mock import Mock
 import pytest
 from pytest_mock import MockerFixture
 
-from src.domain import LoginSession
-from src.infra import AccountDBModel, PersonDBModel, RolDBModel
+from src.domain import Account
+from src.infra import AccountDBModel
 
 from . import LoginMySQLRepository
 
@@ -40,7 +40,7 @@ def test_setup(
     }
 
 
-def test_mysql_login_repository_get_existing_account(
+def test__mysql_login_repository__gets_an_existing_account__when_successful(
     mocker: MockerFixture, test_setup: Dict[str, Any]
 ) -> None:
     repository = test_setup["repository"]
@@ -57,36 +57,17 @@ def test_mysql_login_repository_get_existing_account(
         person_id=test_data["person"]["person_id"],
         role_id=test_data["role"]["role_id"],
     )
-    db_person = PersonDBModel(**test_data["person"])
-    db_role = RolDBModel(**test_data["role"])
 
-    mock_session.query.return_value.filter_by.return_value.first.side_effect = [
-        db_account,
-        db_person,
-        db_role,
-    ]
+    mock_session.query.return_value.filter_by.return_value.first.return_value = (
+        db_account
+    )
 
     result = repository.login(
         email=test_data["account"]["email"], password=test_data["account"]["password"]
     )
 
-    assert isinstance(result, LoginSession)
-    assert result.account == {
-        "account_id": test_data["account"]["account_id"],
-        "email": test_data["account"]["email"],
-        "user": test_data["account"]["user"],
-        "photo": test_data["account"]["photo"],
-    }
-    assert result.person == {
-        "person_id": test_data["person"]["person_id"],
-        "name": test_data["person"]["name"],
-        "phone": test_data["person"]["phone"],
-        "address": test_data["person"]["address"],
-    }
-    assert result.role == {
-        "role_id": test_data["role"]["role_id"],
-        "role_name": test_data["role"]["role_name"],
-    }
+    assert isinstance(result, Account)
+    assert result == Account(**test_data["account"])
 
 
 def test_mysql_login_repository_get_non_existing_role(
