@@ -46,7 +46,9 @@ def test__login_use_case__returns_an_account_id__when_successful(
     response = use_case.execute(input_dto)
 
     dependencies["login_repository"].login.assert_called_once()
-    dependencies["login_presenter"].present.assert_called_once_with(output_data)
+    dependencies["login_presenter"].present.assert_called_once_with(
+        output_dto=output_data, token=None
+    )
     assert response == {"account": account.account_id}
 
 

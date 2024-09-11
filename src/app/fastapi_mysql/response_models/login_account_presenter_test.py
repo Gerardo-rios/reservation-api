@@ -15,7 +15,7 @@ def test_get_role_presenter(
     )
     presenter = LoginAccountPresenter()
     token = "test_token"
-    response = presenter.present(response=output_dto, token=token)
+    response = presenter.present(output_dto=output_dto, token=token)
     assert response == {
         "token": token,
         "account": account.account_id,

@@ -6,9 +6,9 @@ from src.interactor.request_models import LoginOutputDto
 
 class LoginAccountPresenter(LoginPresenterInterface):
     def present(
-        self, response: LoginOutputDto, token: Optional[str] = None
+        self, output_dto: LoginOutputDto, token: Optional[str] = None
     ) -> Dict[str, Any]:
         return {
             "token": token,
-            "account": response.account,
+            "account": output_dto.account,
         }
