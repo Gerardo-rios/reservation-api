@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
-from src.interactor.dtos import CreateAccountOutputDto
+from src.interactor.request_models import CreateAccountOutputDto
 
 
 class CreateAccountPresenterInterface(ABC):

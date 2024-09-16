@@ -4,12 +4,12 @@ import pytest
 from pytest_mock import MockFixture
 
 from src.domain import Account, Person
-from src.interactor.dtos import CreateAccountInputDto, CreateAccountOutputDto
 from src.interactor.errors import ItemNotCreatedException
 from src.interactor.interfaces import (
     AccountRepositoryInterface,
     CreateAccountPresenterInterface,
 )
+from src.interactor.request_models import CreateAccountInputDto, CreateAccountOutputDto
 from src.interactor.use_cases import CreateAccountUseCase
 
 

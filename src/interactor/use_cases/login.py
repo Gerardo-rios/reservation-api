@@ -1,12 +1,8 @@
-from datetime import datetime, timedelta, timezone
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
-import jwt
-
-from configs.config import SECRET_KEY
-from src.interactor.dtos import LoginInputDto, LoginOutputDto
 from src.interactor.errors import AuthenticationError
 from src.interactor.interfaces import LoginPresenterInterface, LoginRepositoryInterface
+from src.interactor.request_models import LoginInputDto, LoginOutputDto
 
 
 class LoginUseCase:
@@ -18,24 +14,13 @@ class LoginUseCase:
         self.repository = login_repository
         self.presenter = login_presenter
 
-    def execute(self, input_dto: LoginInputDto) -> Dict[str, Any]:
-        session = self.repository.login(input_dto.email, input_dto.password)
-        if session is None:
+    def execute(
+        self, input_dto: LoginInputDto, auth_token: Optional[str] = None
+    ) -> Dict[str, Any]:
+        account = self.repository.login(input_dto.email, input_dto.password)
+        if account is None:
             raise AuthenticationError("Invalid email or password provided")
 
-        token = self.__generate_jwt_session_token(session.account["email"])
+        output_login_dto = LoginOutputDto(account=account.account_id)
 
-        session.token = token
-
-        output_login_dto = LoginOutputDto(token=token, session=session)
-
-        return self.presenter.present(output_login_dto)
-
-    def __generate_jwt_session_token(self, email: str) -> str:
-        payload = {
-            "sub": email,
-            "iat": datetime.now(timezone.utc),
-            "exp": datetime.now(timezone.utc) + timedelta(minutes=120),
-        }
-        token = str(jwt.encode(payload, SECRET_KEY, algorithm="HS256"))
-        return token
+        return self.presenter.present(output_dto=output_login_dto, token=auth_token)

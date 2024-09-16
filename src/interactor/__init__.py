@@ -1,9 +1,3 @@
-from .dtos import (
-    CreateAccountInputDto,
-    CreateAccountOutputDto,
-    GetRoleInputDto,
-    GetRoleOutputDto,
-)
 from .errors import (
     AuthenticationError,
     EmailFormatException,
@@ -20,6 +14,12 @@ from .interfaces import (
     LoginPresenterInterface,
     LoginRepositoryInterface,
     RoleRepositoryInterface,
+)
+from .request_models import (
+    CreateAccountInputDto,
+    CreateAccountOutputDto,
+    GetRoleInputDto,
+    GetRoleOutputDto,
 )
 from .use_cases import CreateAccountUseCase, GetRoleUseCase, LoginUseCase
 from .validations import (

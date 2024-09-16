@@ -4,5 +4,6 @@ from .fastapi_mysql import (
     CreateAccountPresenter,
     LoginAccountController,
     LoginAccountPresenter,
+    app,
     create_fastapi_app,
 )

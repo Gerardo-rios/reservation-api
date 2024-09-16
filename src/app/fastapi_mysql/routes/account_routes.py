@@ -10,7 +10,7 @@ from src.app.fastapi_mysql.controllers.account_creation_controller import (
 from src.app.fastapi_mysql.controllers.login_account_controller import (
     LoginAccountController,
 )
-from src.interactor.dtos import LoginInputDto
+from src.interactor.request_models import LoginInputDto
 
 account_router = APIRouter()
 
