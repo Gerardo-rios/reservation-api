@@ -5,7 +5,7 @@ import jwt
 import pytest
 from pytest import MonkeyPatch
 
-from src.interactor.request_models import LoginInputDto
+from src.domain.request_models import LoginInputDto
 
 with mock.patch(
     "sqlalchemy.create_engine",

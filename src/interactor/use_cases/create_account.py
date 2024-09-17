@@ -2,12 +2,12 @@ from typing import Any, Dict
 
 import bcrypt
 
-from src.interactor.errors import ItemNotCreatedException
-from src.interactor.interfaces import (
+from src.domain.interfaces import (
     AccountRepositoryInterface,
     CreateAccountPresenterInterface,
 )
-from src.interactor.request_models import CreateAccountInputDto, CreateAccountOutputDto
+from src.domain.request_models import CreateAccountInputDto, CreateAccountOutputDto
+from src.interactor.errors import ItemNotCreatedException
 from src.interactor.validations import CreateAccountInputDtoValidator
 
 

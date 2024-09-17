@@ -1,7 +1,7 @@
 from typing import Any, Dict
 
 from src.domain import Role
-from src.interactor.request_models import GetRoleOutputDto
+from src.domain.request_models import GetRoleOutputDto
 
 from . import GetRolePresenter
 

@@ -6,7 +6,7 @@ import pytest
 from pytest import MonkeyPatch
 
 from src.domain import Person
-from src.interactor.request_models import CreateAccountInputDto, GetRoleInputDto
+from src.domain.request_models import CreateAccountInputDto, GetRoleInputDto
 
 with mock.patch(
     "sqlalchemy.create_engine",

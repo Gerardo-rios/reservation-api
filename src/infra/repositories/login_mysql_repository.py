@@ -3,9 +3,9 @@ from typing import Optional
 import bcrypt
 
 from src.domain import Account
+from src.domain.interfaces import LoginRepositoryInterface
 from src.infra import AccountDBModel, Session
 from src.interactor.errors import AuthenticationError
-from src.interactor.interfaces import LoginRepositoryInterface
 
 
 class LoginMySQLRepository(LoginRepositoryInterface):

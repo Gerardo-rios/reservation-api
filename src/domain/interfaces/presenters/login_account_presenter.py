@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional
 
-from src.interactor.request_models import LoginOutputDto
+from src.domain.request_models import LoginOutputDto
 
 
 class LoginPresenterInterface(ABC):

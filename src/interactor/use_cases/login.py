@@ -1,8 +1,8 @@
 from typing import Any, Dict, Optional
 
+from src.domain.interfaces import LoginPresenterInterface, LoginRepositoryInterface
+from src.domain.request_models import LoginInputDto, LoginOutputDto
 from src.interactor.errors import AuthenticationError
-from src.interactor.interfaces import LoginPresenterInterface, LoginRepositoryInterface
-from src.interactor.request_models import LoginInputDto, LoginOutputDto
 
 
 class LoginUseCase:
