@@ -7,8 +7,8 @@ from src.app.fastapi_mysql.response_models import (
     GetRolePresenter,
 )
 from src.domain import Person
+from src.domain.request_models import CreateAccountInputDto, GetRoleInputDto
 from src.infra import AccountMySQLRepository, RolMySQLRepository
-from src.interactor.request_models import CreateAccountInputDto, GetRoleInputDto
 from src.interactor.use_cases import CreateAccountUseCase, GetRoleUseCase
 
 from .controllers_utils import validate_input_keys

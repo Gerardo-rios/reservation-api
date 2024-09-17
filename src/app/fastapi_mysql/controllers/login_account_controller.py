@@ -6,8 +6,8 @@ import jwt
 from configs.config import SECRET_KEY
 from src.app.fastapi_mysql.interfaces import AccountControllerInterface
 from src.app.fastapi_mysql.response_models import LoginAccountPresenter
+from src.domain.request_models import LoginInputDto
 from src.infra import LoginMySQLRepository
-from src.interactor.request_models import LoginInputDto
 from src.interactor.use_cases import LoginUseCase
 
 from .controllers_utils import validate_input_keys

@@ -1,8 +1,8 @@
 from typing import Any, Dict
 
+from src.domain.interfaces import GetRolePresenterInterface, RoleRepositoryInterface
+from src.domain.request_models import GetRoleInputDto, GetRoleOutputDto
 from src.interactor.errors import ItemNotFoundException
-from src.interactor.interfaces import GetRolePresenterInterface, RoleRepositoryInterface
-from src.interactor.request_models import GetRoleInputDto, GetRoleOutputDto
 
 
 class GetRoleUseCase:
