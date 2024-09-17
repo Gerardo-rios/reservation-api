@@ -1,3 +1,1 @@
-from .account import Account
-from .person import Person
-from .role import Role
+from .entities import Account, Person, Role
