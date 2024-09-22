@@ -2,7 +2,5 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Role:
-    role_id: str
+class GetRoleRequest:
     role_name: str
-    description: str

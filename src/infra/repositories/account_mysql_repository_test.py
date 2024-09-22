@@ -6,9 +6,9 @@ import pytest
 from pytest_mock import MockerFixture
 from sqlalchemy.exc import IntegrityError
 
-from src.domain import Account, Person
-from src.infra import AccountDBModel, PersonDBModel
-from src.interactor.errors import UniqueViolationError
+from src.domain import entities
+from src.infra import db_models
+from src.interactor import errors
 
 from . import AccountMySQLRepository
 
@@ -20,10 +20,10 @@ def test_setup(mocker: MockerFixture) -> Dict[str, Any]:
 
     mock_session = Mock()
     mock_account_db_model = mocker.patch(
-        "src.infra.repositories.account_mysql_repository.AccountDBModel"
+        "src.infra.repositories.account_mysql_repository.db_models.AccountDBModel"
     )
     mock_person_db_model = mocker.patch(
-        "src.infra.repositories.account_mysql_repository.PersonDBModel"
+        "src.infra.repositories.account_mysql_repository.db_models.PersonDBModel"
     )
 
     test_data = {
@@ -47,11 +47,11 @@ def test_setup(mocker: MockerFixture) -> Dict[str, Any]:
         },
     }
 
-    mock_account_db_model.return_value = AccountDBModel(**test_data["new_account"])  # type: ignore  # noqa
-    mock_person_db_model.return_value = PersonDBModel(**test_data["new_person"])  # type: ignore  # noqa
+    mock_account_db_model.return_value = db_models.AccountDBModel(**test_data["new_account"])  # type: ignore  # noqa
+    mock_person_db_model.return_value = db_models.PersonDBModel(**test_data["new_person"])  # type: ignore  # noqa
 
     mocker.patch(
-        "src.infra.repositories.account_mysql_repository.Session",
+        "src.infra.repositories.account_mysql_repository.db_models.db_base.Session",
         return_value=mock_session,
     )
 
@@ -67,9 +67,19 @@ def test_setup(mocker: MockerFixture) -> Dict[str, Any]:
     }
 
 
-def test_mysql_account_repository_create_account(test_setup: Dict[str, Any]) -> None:
+def test__mysql_account_repository__create_account__succeeds__when_data_is_valid(
+    test_setup: Dict[str, Any]
+) -> None:
     repository = test_setup["repository"]
     test_data = test_setup["test_data"]
+
+    mock_account_instance = test_setup["mock_account_db_model"].return_value
+    mock_account_instance.account_id = test_data["new_account"]["account_id"]
+    mock_account_instance.email = test_data["new_account"]["email"]
+    mock_account_instance.password = test_data["new_account"]["password"]
+    mock_account_instance.username = test_data["new_account"]["username"]
+    mock_account_instance.photo = test_data["new_account"]["photo"]
+    mock_account_instance.status = test_data["new_account"]["status"]
 
     account = repository.create(
         email=test_data["new_account"]["email"],
@@ -78,7 +88,7 @@ def test_mysql_account_repository_create_account(test_setup: Dict[str, Any]) -> 
         photo=test_data["new_account"]["photo"],
         status=test_data["new_account"]["status"],
         role_id=test_data["new_account"]["role_id"],
-        person=Person(**test_data["new_person"]),
+        person=entities.Person(**test_data["new_person"]),
     )
 
     assert account is not None
@@ -90,7 +100,7 @@ def test_mysql_account_repository_create_account(test_setup: Dict[str, Any]) -> 
     assert account.status == test_data["new_account"]["status"]
 
 
-def test_mysql_account_repository_create_account_unique_violation(
+def test__mysql_account_repository__create_account__fails__when_account_already_exists(
     test_setup: Dict[str, Any]
 ) -> None:
     repository = test_setup["repository"]
@@ -100,7 +110,7 @@ def test_mysql_account_repository_create_account_unique_violation(
         "IntegrityError", "IntegrityError", "IntegrityError"
     )
 
-    with pytest.raises(UniqueViolationError):
+    with pytest.raises(errors.UniqueViolationError):
         repository.create(
             email=test_data["new_account"]["email"],
             password=test_data["new_account"]["password"],
@@ -108,11 +118,11 @@ def test_mysql_account_repository_create_account_unique_violation(
             photo=test_data["new_account"]["photo"],
             status=test_data["new_account"]["status"],
             role_id=test_data["new_account"]["role_id"],
-            person=Person(**test_data["new_person"]),
+            person=entities.Person(**test_data["new_person"]),
         )
 
 
-def test_mysql_account_repository_create_person_phone_unique_violation(
+def test__mysql_account_repository__create_person_phone__fails__when_phone_number_already_exists(  # noqa
     test_setup: Dict[str, Any]
 ) -> None:
     repository = test_setup["repository"]
@@ -122,7 +132,7 @@ def test_mysql_account_repository_create_person_phone_unique_violation(
         "IntegrityError", "phone", "IntegrityError"
     )
 
-    with pytest.raises(UniqueViolationError):
+    with pytest.raises(errors.UniqueViolationError):
         repository.create(
             email=test_data["new_account"]["email"],
             password=test_data["new_account"]["password"],
@@ -130,24 +140,31 @@ def test_mysql_account_repository_create_person_phone_unique_violation(
             photo=test_data["new_account"]["photo"],
             status=test_data["new_account"]["status"],
             role_id=test_data["new_account"]["role_id"],
-            person=Person(**test_data["new_person"]),
+            person=entities.Person(**test_data["new_person"]),
         )
 
 
-def test_mysql_account_repository_get_existing_account(
+def test__mysql_account_repository__get_account__returns_account__when_account_exists(
     test_setup: Dict[str, Any]
 ) -> None:
     repository = test_setup["repository"]
     test_data = test_setup["test_data"]
 
-    db_account = AccountDBModel(**test_data["new_account"])
+    mock_account_instance = test_setup["mock_account_db_model"].return_value
+    mock_account_instance.account_id = test_data["new_account"]["account_id"]
+    mock_account_instance.email = test_data["new_account"]["email"]
+    mock_account_instance.password = test_data["new_account"]["password"]
+    mock_account_instance.username = test_data["new_account"]["username"]
+    mock_account_instance.photo = test_data["new_account"]["photo"]
+    mock_account_instance.status = test_data["new_account"]["status"]
+
     repository._AccountMySQLRepository__session.query.return_value.filter_by.return_value.first.return_value = (  # noqa
-        db_account
+        mock_account_instance
     )
 
     result = repository.get(account_id=test_data["new_account"]["account_id"])
 
-    assert isinstance(result, Account)
+    assert isinstance(result, entities.Account)
     assert result.account_id == test_data["new_account"]["account_id"]
     assert result.email == test_data["new_account"]["email"]
     assert result.password == test_data["new_account"]["password"]
@@ -156,7 +173,7 @@ def test_mysql_account_repository_get_existing_account(
     assert result.status == test_data["new_account"]["status"]
 
 
-def test_mysql_account_repository_get_non_existing_account(
+def test__mysql_account_repository__get_account__returns_none__when_account_does_not_exist(  # noqa
     test_setup: Dict[str, Any]
 ) -> None:
     repository = test_setup["repository"]
@@ -171,11 +188,13 @@ def test_mysql_account_repository_get_non_existing_account(
     assert result is None
 
 
-def test_mysql_account_repository_update_account(test_setup: Dict[str, Any]) -> None:
+def test__mysql_account_repository__update_account__succeeds__with_valid_data(
+    test_setup: Dict[str, Any]
+) -> None:
     repository = test_setup["repository"]
     test_data = test_setup["test_data"]
-    mock_account_db_model = test_setup["mock_account_db_model"]
-    account = Account(
+
+    account = entities.Account(
         account_id=test_data["new_account"]["account_id"],
         email=test_data["new_account"]["email"],
         password="new_Strong_passw0rd!",
@@ -183,16 +202,15 @@ def test_mysql_account_repository_update_account(test_setup: Dict[str, Any]) -> 
         photo="new_photo",
         status=test_data["new_account"]["status"],
     )
-    mock_account_db_model.return_value = AccountDBModel(
-        account_id=account.account_id,
-        email=account.email,
-        password=account.password,
-        username=account.user,
-        photo=account.photo,
-        status=account.status,
-        role_id=test_data["new_account"]["role_id"],
-        person_id=test_data["new_account"]["person_id"],
-    )
+
+    mock_account_instance = test_setup["mock_account_db_model"].return_value
+    mock_account_instance.account_id = account.account_id
+    mock_account_instance.email = account.email
+    mock_account_instance.password = account.password
+    mock_account_instance.username = account.user
+    mock_account_instance.photo = account.photo
+    mock_account_instance.status = account.status
+
     repository._AccountMySQLRepository__session.query.return_value.filter_by.return_value.update.return_value = (  # noqa
         1
     )
@@ -211,13 +229,13 @@ def test_mysql_account_repository_update_account(test_setup: Dict[str, Any]) -> 
     repository._AccountMySQLRepository__session.query.return_value.filter_by.return_value.update.assert_called_once()  # noqa
 
 
-def test_mysql_account_repository_update_non_existing_account(
+def test__mysql_account_repository__update_account__raises_error__for_non_existent_account(  # noqa
     test_setup: Dict[str, Any]
 ) -> None:
     repository = test_setup["repository"]
     test_data = test_setup["test_data"]
     mock_account_db_model = test_setup["mock_account_db_model"]
-    account = Account(
+    account = entities.Account(
         account_id=test_data["new_account"]["account_id"],
         email=test_data["new_account"]["email"],
         password="new_Strong_passw0rd!",
@@ -225,7 +243,7 @@ def test_mysql_account_repository_update_non_existing_account(
         photo="new_photo",
         status=test_data["new_account"]["status"],
     )
-    mock_account_db_model.return_value = AccountDBModel(
+    mock_account_db_model.return_value = db_models.AccountDBModel(
         account_id=account.account_id,
         email=account.email,
         password=account.password,

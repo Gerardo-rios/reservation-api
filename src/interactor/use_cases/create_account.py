@@ -1,45 +1,41 @@
-from typing import Any, Dict
+from dataclasses import asdict
 
 import bcrypt
 
-from src.domain.interfaces import (
-    AccountRepositoryInterface,
-    CreateAccountPresenterInterface,
-)
-from src.domain.request_models import CreateAccountInputDto, CreateAccountOutputDto
-from src.interactor.errors import ItemNotCreatedException
-from src.interactor.validations import CreateAccountInputDtoValidator
+from src.domain import interfaces
+from src.interactor import errors, request_models, response_models, validations
 
 
 class CreateAccountUseCase:
     def __init__(
         self,
-        account_repository: AccountRepositoryInterface,
-        presenter: CreateAccountPresenterInterface,
+        account_repository: interfaces.AccountRepositoryInterface,
     ):
         self.account_repository = account_repository
-        self.presenter = presenter
 
-    def execute(self, input_dto: CreateAccountInputDto) -> Dict[str, Any]:
-        validator = CreateAccountInputDtoValidator(input_dto.to_dict())
+    def execute(
+        self, input_data: request_models.CreateAccountRequest
+    ) -> response_models.CreateAccountResponse:
+        validator = validations.CreateAccountInputDtoValidator(asdict(input_data))
         validator.validate()
         hashed_password = bcrypt.hashpw(
-            input_dto.password.encode("utf-8"), bcrypt.gensalt()
+            input_data.password.encode("utf-8"), bcrypt.gensalt()
         ).decode("utf-8")
         account = self.account_repository.create(
-            email=input_dto.email,
+            email=input_data.email,
             password=hashed_password,
-            user=input_dto.user,
-            photo=input_dto.photo,
+            user=input_data.user,
+            photo=input_data.photo,
             status=True,
-            role_id=input_dto.role_id,
-            person=input_dto.person,
+            role_id=input_data.role_id,
+            person_id=input_data.person_id,
         )
         if account is None:
-            raise ItemNotCreatedException(input_dto.email, "account")
+            raise errors.ItemNotCreatedException(input_data.email, "account")
 
-        output_dto = CreateAccountOutputDto(
-            account=account, role_id=input_dto.role_id, person=input_dto.person
+        result = response_models.CreateAccountResponse(
+            account_id=account.account_id,
+            role_id=input_data.role_id,
+            person_id=input_data.person_id,
         )
-        presenter_response = self.presenter.present(output_dto)
-        return presenter_response
+        return result

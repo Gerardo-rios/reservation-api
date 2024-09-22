@@ -30,7 +30,8 @@ def test_setup(mocker: MockerFixture) -> Dict[str, Any]:
     }
 
     mocker.patch(
-        "src.infra.repositories.rol_mysql_repository.Session", return_value=mock_session
+        "src.infra.repositories.rol_mysql_repository.db_models.db_base.Session",
+        return_value=mock_session,
     )
 
     repository = RolMySQLRepository()

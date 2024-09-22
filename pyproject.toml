@@ -25,6 +25,7 @@ alembic = "^1.13.2"
 isort = "^5.13.2"
 pyjwt = "^2.9.0"
 watchgod = "^0.8.2"
+pydantic = "^2.9.2"
 
 
 [build-system]

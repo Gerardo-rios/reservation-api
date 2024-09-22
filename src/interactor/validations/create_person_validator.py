@@ -1,6 +1,6 @@
 from typing import Dict
 
-from src.interactor.errors import FieldValueNotPermittedException
+from src.interactor import errors
 
 from . import BaseInputValidator
 
@@ -61,8 +61,10 @@ class CreatePersonInputDtoValidator(BaseInputValidator):
 
     def __validate_country(self) -> None:
         if self.data["country"].lower() != "ecuador":
-            raise FieldValueNotPermittedException("Country", self.data["country"])
+            raise errors.FieldValueNotPermittedException(
+                "Country", self.data["country"]
+            )
 
     def __validate_city(self) -> None:
         if self.data["city"].lower() != "loja":
-            raise FieldValueNotPermittedException("City", self.data["city"])
+            raise errors.FieldValueNotPermittedException("City", self.data["city"])

@@ -3,18 +3,19 @@ from typing import Optional
 
 from sqlalchemy.exc import IntegrityError
 
-from src.domain import Account, Person
-from src.domain.interfaces import AccountRepositoryInterface
-from src.infra import AccountDBModel, PersonDBModel, Session
-from src.interactor.errors import UniqueViolationError
+from src.domain import entities, interfaces
+from src.infra import db_models
+from src.interactor import errors
 
 
-class AccountMySQLRepository(AccountRepositoryInterface):
+class AccountMySQLRepository(interfaces.AccountRepositoryInterface):
     def __init__(self) -> None:
-        self.__session = Session
+        self.__session = db_models.db_base.Session
 
-    def __db_to_entity(self, db_row: AccountDBModel) -> Optional[Account]:
-        return Account(
+    def __db_to_entity(
+        self, db_row: db_models.AccountDBModel
+    ) -> Optional[entities.Account]:
+        return entities.Account(
             account_id=db_row.account_id,
             email=db_row.email,
             password=db_row.password,
@@ -31,9 +32,9 @@ class AccountMySQLRepository(AccountRepositoryInterface):
         photo: str,
         status: bool,
         role_id: str,
-        person: Person,
-    ) -> Optional[Account]:
-        new_person = PersonDBModel(
+        person: entities.Person,
+    ) -> Optional[entities.Account]:
+        new_person = db_models.PersonDBModel(
             person_id=person.person_id,
             name=person.name,
             phone=person.phone,
@@ -42,7 +43,7 @@ class AccountMySQLRepository(AccountRepositoryInterface):
             country=person.country,
         )
 
-        new_account = AccountDBModel(
+        new_account = db_models.AccountDBModel(
             account_id=uuid.uuid4(),
             email=email,
             password=password,
@@ -61,16 +62,16 @@ class AccountMySQLRepository(AccountRepositoryInterface):
         except IntegrityError as e:
             self.__session.rollback()
             if "phone" in str(e.orig):
-                raise UniqueViolationError("Phone number already exists")
-            raise UniqueViolationError("Account email already exists")
+                raise errors.UniqueViolationError("Phone number already exists")
+            raise errors.UniqueViolationError("Account email already exists")
 
         if new_account is not None:
             return self.__db_to_entity(new_account)
         return None
 
-    def get(self, account_id: str) -> Optional[Account]:
+    def get(self, account_id: str) -> Optional[entities.Account]:
         db_row = (
-            self.__session.query(AccountDBModel)
+            self.__session.query(db_models.AccountDBModel)
             .filter_by(account_id=account_id)
             .first()
         )
@@ -78,8 +79,8 @@ class AccountMySQLRepository(AccountRepositoryInterface):
             return None
         return self.__db_to_entity(db_row)
 
-    def update(self, account: Account) -> Optional[Account]:
-        account_db_model = AccountDBModel(
+    def update(self, account: entities.Account) -> Optional[entities.Account]:
+        account_db_model = db_models.AccountDBModel(
             account_id=account.account_id,
             email=account.email,
             password=account.password,
@@ -90,7 +91,7 @@ class AccountMySQLRepository(AccountRepositoryInterface):
             person_id="",
         )
         result = (
-            self.__session.query(AccountDBModel)
+            self.__session.query(db_models.AccountDBModel)
             .filter_by(account_id=account.account_id)
             .update(
                 {

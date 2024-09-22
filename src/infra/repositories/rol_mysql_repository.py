@@ -1,23 +1,26 @@
 from typing import Optional
 
-from src.domain import Role
-from src.domain.interfaces import RoleRepositoryInterface
-from src.infra import RolDBModel, Session
+from src.domain import entities, interfaces
+from src.infra import db_models
 
 
-class RolMySQLRepository(RoleRepositoryInterface):
+class RolMySQLRepository(interfaces.RoleRepositoryInterface):
     def __init__(self) -> None:
-        self.__session = Session
+        self.__session = db_models.db_base.Session
 
-    def __db_to_entity(self, db_row: RolDBModel) -> Optional[Role]:
-        return Role(
+    def __db_to_entity(self, db_row: db_models.RolDBModel) -> Optional[entities.Role]:
+        return entities.Role(
             role_id=db_row.role_id,
             role_name=db_row.role_name,
             description=db_row.description,
         )
 
-    def get(self, role_name: str) -> Optional[Role]:
-        db_row = self.__session.query(RolDBModel).filter_by(role_name=role_name).first()
+    def get(self, role_name: str) -> Optional[entities.Role]:
+        db_row = (
+            self.__session.query(db_models.RolDBModel)
+            .filter_by(role_name=role_name)
+            .first()
+        )
         if db_row is None:
             return None
         return self.__db_to_entity(db_row)

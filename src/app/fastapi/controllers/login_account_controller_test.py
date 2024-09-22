@@ -5,7 +5,7 @@ import jwt
 import pytest
 from pytest import MonkeyPatch
 
-from src.domain.request_models import LoginInputDto
+from src.interactor import request_models
 
 with mock.patch(
     "sqlalchemy.create_engine",
@@ -27,13 +27,10 @@ def test_setup(
     monkeypatch.setattr("builtins.input", lambda _: next(fake_user_inputs))  # type: ignore  # noqa
 
     mock_login_repository = mocker.patch(
-        "src.app.fastapi_mysql.controllers.login_account_controller.LoginMySQLRepository"  # noqa
-    )
-    mock_login_presenter = mocker.patch(
-        "src.app.fastapi_mysql.controllers.login_account_controller.LoginAccountPresenter"  # noqa
+        "src.app.fastapi.controllers.login_account_controller.repositories.LoginMySQLRepository"  # noqa
     )
     mock_login_use_case = mocker.patch(
-        "src.app.fastapi_mysql.controllers.login_account_controller.LoginUseCase"  # noqa
+        "src.app.fastapi.controllers.login_account_controller.use_cases.LoginUseCase"  # noqa
     )
     mock_login_use_case_instance = mock_login_use_case.return_value
 
@@ -49,7 +46,6 @@ def test_setup(
     return {
         "fake_user_inputs": fake_user_inputs,
         "mock_login_repository": mock_login_repository,
-        "mock_login_presenter": mock_login_presenter,
         "mock_login_use_case": mock_login_use_case,
         "mock_login_use_case_instance": mock_login_use_case_instance,
         "expected_login_use_case_response": expected_login_use_case_response,
@@ -62,12 +58,11 @@ def test__login__returns__an_auth_token_and_account_id__when_successful(
 ) -> None:
     fake_user_inputs = test_setup["fake_user_inputs"]
     mock_login_repository = test_setup["mock_login_repository"]
-    mock_login_presenter = test_setup["mock_login_presenter"]
     mock_login_use_case = test_setup["mock_login_use_case"]
     mock_login_use_case_instance = test_setup["mock_login_use_case_instance"]
     expected_login_use_case_response = test_setup["expected_login_use_case_response"]
 
-    login_input_dto = LoginInputDto(
+    login_input_dto = request_models.LoginRequest(
         email=test_setup["account_data"]["email"],
         password=test_setup["account_data"]["password"],
     )
@@ -76,10 +71,8 @@ def test__login__returns__an_auth_token_and_account_id__when_successful(
     result = controller.execute()
 
     mock_login_repository.assert_called_once()
-    mock_login_presenter.assert_called_once()
     mock_login_use_case.assert_called_once_with(
         login_repository=mock_login_repository.return_value,
-        login_presenter=mock_login_presenter.return_value,
     )
     mock_login_use_case_instance.execute.assert_called_once_with(
         input_dto=login_input_dto, auth_token="test_token"

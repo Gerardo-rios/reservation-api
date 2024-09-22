@@ -4,7 +4,7 @@ from unittest.mock import Mock
 from fastapi import HTTPException, Request
 from fastapi.testclient import TestClient
 
-from src.app.fastapi_mysql.create_fast_api_app import create_fastapi_app, get_db
+from src.app.fastapi.create_fast_api_app import create_fastapi_app, get_db
 
 app = create_fastapi_app()
 client = TestClient(app)
@@ -40,7 +40,7 @@ def test_value_error_handler() -> None:
 
 def test_db_session_middleware(mocker: Mock) -> None:
     mock_db_session = mocker.patch(
-        "src.app.fastapi_mysql.create_fast_api_app.DbSession", autospec=True
+        "src.app.fastapi.create_fast_api_app.db_models.db_base.Session", autospec=True
     )
 
     @app.get("/test_db")

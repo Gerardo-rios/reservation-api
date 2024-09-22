@@ -3,7 +3,7 @@ from typing import Dict
 import pytest
 from pytest_mock import MockFixture
 
-from src.interactor.errors import FieldValueNotPermittedException
+from src.interactor import errors
 
 from . import CreatePersonInputDtoValidator
 
@@ -75,7 +75,7 @@ def test_create_person_input_dto_validator_with_invalid_country(
     input_data = test_data
     input_data["country"] = "United States"
     validator = CreatePersonInputDtoValidator(input_data)
-    with pytest.raises(FieldValueNotPermittedException) as e:
+    with pytest.raises(errors.FieldValueNotPermittedException) as e:
         validator.validate()
     assert str(e.value) == "Country: United States is not a permitted value"
 
@@ -86,7 +86,7 @@ def test_create_person_input_dto_validator_with_invalid_city(
     input_data = test_data
     input_data["city"] = "Quito"
     validator = CreatePersonInputDtoValidator(input_data)
-    with pytest.raises(FieldValueNotPermittedException) as e:
+    with pytest.raises(errors.FieldValueNotPermittedException) as e:
         validator.validate()
     assert str(e.value) == "City: Quito is not a permitted value"
 
