@@ -88,7 +88,7 @@ def test__mysql_account_repository__create_account__succeeds__when_data_is_valid
         photo=test_data["new_account"]["photo"],
         status=test_data["new_account"]["status"],
         role_id=test_data["new_account"]["role_id"],
-        person=entities.Person(**test_data["new_person"]),
+        person_id=test_data["new_account"]["person_id"],
     )
 
     assert account is not None
@@ -118,7 +118,7 @@ def test__mysql_account_repository__create_account__fails__when_account_already_
             photo=test_data["new_account"]["photo"],
             status=test_data["new_account"]["status"],
             role_id=test_data["new_account"]["role_id"],
-            person=entities.Person(**test_data["new_person"]),
+            person_id=test_data["new_account"]["person_id"],
         )
 
 
@@ -140,7 +140,7 @@ def test__mysql_account_repository__create_person_phone__fails__when_phone_numbe
             photo=test_data["new_account"]["photo"],
             status=test_data["new_account"]["status"],
             role_id=test_data["new_account"]["role_id"],
-            person=entities.Person(**test_data["new_person"]),
+            person_id=test_data["new_account"]["person_id"],
         )
 
 

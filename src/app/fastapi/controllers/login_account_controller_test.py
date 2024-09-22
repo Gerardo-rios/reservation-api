@@ -75,7 +75,7 @@ def test__login__returns__an_auth_token_and_account_id__when_successful(
         login_repository=mock_login_repository.return_value,
     )
     mock_login_use_case_instance.execute.assert_called_once_with(
-        input_dto=login_input_dto, auth_token="test_token"
+        request_input=login_input_dto, auth_token="test_token"
     )
     assert result == expected_login_use_case_response
 
