@@ -4,13 +4,11 @@ from fastapi import APIRouter, Depends
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
-from src.app.fastapi_mysql.controllers.account_creation_controller import (
+from src.app.fastapi.controllers.account_creation_controller import (
     CreateAccountController,
 )
-from src.app.fastapi_mysql.controllers.login_account_controller import (
-    LoginAccountController,
-)
-from src.domain.request_models import LoginInputDto
+from src.app.fastapi.controllers.login_account_controller import LoginAccountController
+from src.interactor import request_models
 
 account_router = APIRouter()
 
@@ -28,7 +26,7 @@ async def create_account(
 
 @account_router.post("/account/login", status_code=200)
 async def login_account(
-    json_input_data: LoginInputDto,
+    json_input_data: request_models.LoginRequest,
     controller: LoginAccountController = Depends(LoginAccountController),
 ) -> JSONResponse:
     controller.create_request_data(json_input_data.to_dict())

@@ -3,7 +3,7 @@ from typing import Any, Dict
 import pytest
 from pytest_mock import MockFixture
 
-from src.interactor.errors import EmailFormatException, PasswordFormatException
+from src.interactor import errors
 
 from . import CreateAccountInputDtoValidator
 
@@ -18,12 +18,12 @@ def test_data(
     del fixture_account_data["status"]
     return {
         **fixture_account_data,
-        "role_id": str(fixture_role_data["role_id"]),
-        "person": fixture_person_data,
+        "role_id": fixture_role_data["role_id"],
+        "person_id": fixture_person_data["person_id"],
     }
 
 
-def test_create_account_input_dto_validator(
+def test__create_account_input_dto_validator__does_not_raise_a_error__when_successfully_validates(  # noqa
     test_data: Dict[str, Any], mocker: MockFixture
 ) -> None:
     mocker.patch(
@@ -53,15 +53,15 @@ def test_create_account_input_dto_validator(
         },
         "photo": {"type": "string", "required": False, "empty": True},
         "role_id": {"type": "string", "required": True, "empty": False},
-        "person": {"type": "dict", "required": True, "empty": False},
+        "person_id": {"type": "string", "required": True, "empty": False},
     }
     validator = CreateAccountInputDtoValidator(test_data)
     validator.validate()
     validator.verify.assert_any_call(schema)
-    validator.verify.call_count == 2
+    validator.verify.call_count == 1
 
 
-def test_create_account_input_dto_validator_with_invalid_email(
+def test__create_account_input_dto_validator__raises_an_error__when_invalid_email_is_provided(  # noqa
     test_data: Dict[str, Any], mocker: MockFixture
 ) -> None:
     mocker.patch(
@@ -70,12 +70,12 @@ def test_create_account_input_dto_validator_with_invalid_email(
     input_data = test_data
     input_data["email"] = "invalid_email"
     validator = CreateAccountInputDtoValidator(input_data)
-    with pytest.raises(EmailFormatException) as e:
+    with pytest.raises(errors.EmailFormatException) as e:
         validator.validate()
     assert str(e.value) == "Email 'invalid_email' has an invalid format"
 
 
-def test_create_account_input_dto_validator_with_invalid_password(
+def test__create_account_input_dto_validator__raises_error__when_password_is_invalid(
     test_data: Dict[str, Any], mocker: MockFixture
 ) -> None:
     mocker.patch(
@@ -84,12 +84,12 @@ def test_create_account_input_dto_validator_with_invalid_password(
     input_data = test_data
     input_data["password"] = "invalid_password"
     validator = CreateAccountInputDtoValidator(input_data)
-    with pytest.raises(PasswordFormatException) as e:
+    with pytest.raises(errors.PasswordFormatException) as e:
         validator.validate()
     assert str(e.value) == "Password 'invalid_password' has not the required format"
 
 
-def test_create_account_input_dto_validator_with_empty_values(
+def test__create_account_input_dto_validator__raises_error__when_input_fields_are_empty(
     test_data: Dict[str, Any], mocker: MockFixture
 ) -> None:
     input_data = test_data

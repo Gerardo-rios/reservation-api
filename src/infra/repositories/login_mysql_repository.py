@@ -2,21 +2,20 @@ from typing import Optional
 
 import bcrypt
 
-from src.domain import Account
-from src.domain.interfaces import LoginRepositoryInterface
-from src.infra import AccountDBModel, Session
-from src.interactor.errors import AuthenticationError
+from src.domain import entities, interfaces
+from src.infra import db_models
+from src.interactor import errors
 
 
-class LoginMySQLRepository(LoginRepositoryInterface):
+class LoginMySQLRepository(interfaces.LoginRepositoryInterface):
     def __init__(self) -> None:
-        self.__session = Session
+        self.__session = db_models.db_base.Session
 
     def __db_to_entity(
         self,
-        db_row_account: AccountDBModel,
-    ) -> Optional[Account]:
-        return Account(
+        db_row_account: db_models.AccountDBModel,
+    ) -> Optional[entities.Account]:
+        return entities.Account(
             account_id=db_row_account.account_id,
             email=db_row_account.email,
             password=db_row_account.password,
@@ -25,8 +24,12 @@ class LoginMySQLRepository(LoginRepositoryInterface):
             status=db_row_account.status,
         )
 
-    def login(self, email: str, password: str) -> Optional[Account]:
-        account = self.__session.query(AccountDBModel).filter_by(email=email).first()
+    def login(self, email: str, password: str) -> Optional[entities.Account]:
+        account = (
+            self.__session.query(db_models.AccountDBModel)
+            .filter_by(email=email)
+            .first()
+        )
         if account is None:
             return None
         password_matches = bcrypt.checkpw(
@@ -35,5 +38,5 @@ class LoginMySQLRepository(LoginRepositoryInterface):
         if not password_matches:
             return None
         if not account.status:
-            raise AuthenticationError("Account is inactive")
+            raise errors.AuthenticationError("Account is inactive")
         return self.__db_to_entity(account)

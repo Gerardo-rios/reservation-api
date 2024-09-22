@@ -26,7 +26,7 @@ def test_setup(
     }
 
     mocker.patch(
-        "src.infra.repositories.login_mysql_repository.Session",
+        "src.infra.repositories.login_mysql_repository.db_models.db_base.Session",
         return_value=mock_session,
     )
 

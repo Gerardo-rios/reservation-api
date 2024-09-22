@@ -1,9 +1,7 @@
-from .fastapi_mysql import (
+from .fastapi import (
     AccountControllerInterface,
     CreateAccountController,
-    CreateAccountPresenter,
     LoginAccountController,
-    LoginAccountPresenter,
     app,
     create_fastapi_app,
 )

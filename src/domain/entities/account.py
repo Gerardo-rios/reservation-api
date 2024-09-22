@@ -1,5 +1,4 @@
-from dataclasses import asdict, dataclass
-from typing import Any, Dict
+from dataclasses import dataclass
 
 
 @dataclass
@@ -10,10 +9,3 @@ class Account:
     user: str
     photo: str
     status: bool
-
-    @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "Account":
-        return cls(**data)
-
-    def to_dict(self) -> Dict[str, Any]:
-        return asdict(self)
