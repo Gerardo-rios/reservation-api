@@ -5,7 +5,7 @@ from unittest import mock
 import pytest
 from pytest import MonkeyPatch
 
-from src.interactor import request_models
+from src.interactor import request_models, response_models
 
 with mock.patch(
     "sqlalchemy.create_engine",
@@ -53,11 +53,11 @@ def test_setup(
     mock_get_role_use_case_instance = mock_get_role_use_case.return_value
     mock_create_account_use_case_instance = mock_create_account_use_case.return_value
 
-    expected_role_use_case_result = {
-        "role_id": fixture_role_data["role_id"],
-        "role_name": fixture_role_data["role_name"],
-        "description": fixture_role_data["description"],
-    }
+    expected_role_use_case_result = response_models.GetRoleResponse(
+        role_id=fixture_role_data["role_id"],
+        role_name=fixture_role_data["role_name"],
+        description=fixture_role_data["description"],
+    )
 
     expected_account_use_case_result = {
         "account_id": fixture_account_data["account_id"],

@@ -3,7 +3,7 @@ from typing import Any, Dict
 
 from src.app.fastapi import interfaces
 from src.infra import repositories
-from src.interactor import request_models, use_cases
+from src.interactor import request_models, response_models, use_cases
 
 from .controllers_utils import validate_input_keys
 
@@ -38,13 +38,13 @@ class CreateAccountController(interfaces.AccountControllerInterface):
             password=json_input_data["password"],
             user=json_input_data["user"],
             photo=json_input_data["photo"],
-            role_id=role["role_id"],
+            role_id=role.role_id,
             person_id=str(
                 uuid.uuid4()
             ),  # TODO: change this to a real person_id getting the person or creating a person in the database when needed  # noqa
         )
 
-    def execute(self) -> Dict[str, Any]:
+    def execute(self) -> response_models.CreateAccountResponse:
         repository = repositories.AccountMySQLRepository()
         use_case = use_cases.CreateAccountUseCase(account_repository=repository)
         response = use_case.execute(self.input_account_request)

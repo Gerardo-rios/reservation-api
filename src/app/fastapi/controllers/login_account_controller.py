@@ -6,12 +6,12 @@ import jwt
 from configs.config import SECRET_KEY
 from src.app.fastapi import interfaces
 from src.infra import repositories
-from src.interactor import request_models, use_cases
+from src.interactor import request_models, response_models, use_cases
 
 from .controllers_utils import validate_input_keys
 
 
-class LoginAccountController(interfaces.AccountControllerInterface):
+class LoginAccountController(interfaces.LoginControllerInterface):
     TOKEN_EXPIRATION_MINUTES = 120
     TOKEN_ALGORITHM = "HS256"
 
@@ -26,12 +26,12 @@ class LoginAccountController(interfaces.AccountControllerInterface):
             email=json_input_data["email"], password=json_input_data["password"]
         )
 
-    def execute(self) -> Dict[str, Any]:
+    def execute(self) -> response_models.LoginResponse:
         repository = repositories.LoginMySQLRepository()
         use_case = use_cases.LoginUseCase(login_repository=repository)
         auth_token = self.__generate_jwt_session_token(self.input_login_dto.email)
         response = use_case.execute(
-            input_dto=self.input_login_dto, auth_token=auth_token
+            request_input=self.input_login_dto, auth_token=auth_token
         )
         return response
 
