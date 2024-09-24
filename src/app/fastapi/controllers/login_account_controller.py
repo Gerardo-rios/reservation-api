@@ -8,7 +8,7 @@ from src.app.fastapi import interfaces
 from src.infra import repositories
 from src.interactor import request_models, response_models, use_cases
 
-from .controllers_utils import validate_input_keys
+from . import controllers_utils
 
 
 class LoginAccountController(interfaces.LoginControllerInterface):
@@ -20,7 +20,7 @@ class LoginAccountController(interfaces.LoginControllerInterface):
 
     def create_request_data(self, json_input_data: Dict[str, Any]) -> None:
         valid_keys = ["email", "password"]
-        validate_input_keys(json_input_data, valid_keys)
+        controllers_utils.validate_input_keys(json_input_data, valid_keys)
 
         self.input_login_dto = request_models.LoginRequest(
             email=json_input_data["email"], password=json_input_data["password"]

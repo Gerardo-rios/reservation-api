@@ -1,10 +1,10 @@
 from typing import Any, Dict
 
-import controllers_utils
-
 from src.app.fastapi import interfaces
 from src.infra import repositories
 from src.interactor import request_models, response_models, use_cases
+
+from . import controllers_utils
 
 
 class CreateAccountController(interfaces.AccountControllerInterface):
@@ -39,17 +39,9 @@ class CreateAccountController(interfaces.AccountControllerInterface):
         get_person_use_case = use_cases.GetPersonUseCase(
             person_repository=person_repository
         )
-        person = create_person_use_case.execute(
-            request_models.CreatePersonRequest(
-                name=json_input_data["name"],
-                phone=json_input_data["phone"],
-                address=json_input_data["address"],
-            )
-        )
+        person = create_person_use_case.execute()
         if not person:
-            person = get_person_use_case.execute(
-                request_models.GetPersonRequest(phone=json_input_data["phone"])
-            )
+            person = get_person_use_case.execute()
 
         self.input_account_request = request_models.CreateAccountRequest(
             email=json_input_data["email"],
@@ -57,7 +49,7 @@ class CreateAccountController(interfaces.AccountControllerInterface):
             user=json_input_data["user"],
             photo=json_input_data["photo"],
             role_id=role.role_id,
-            person_id=person.person_id,
+            person_id=person["person_id"],
         )
 
     def execute(self) -> response_models.CreateAccountResponse:
