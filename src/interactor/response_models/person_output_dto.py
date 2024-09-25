@@ -1,8 +1,10 @@
 from dataclasses import dataclass
 
+
 @dataclass
 class CreatePersonResponse:
     person_id: str
+
 
 @dataclass
 class GetPersonResponse:
