@@ -8,6 +8,9 @@ from . import controllers_utils
 
 
 class CreateAccountController(interfaces.AccountControllerInterface):
+    DEFAULT_CITY = "loja"
+    DEFAULT_COUNTRY = "ecuador"
+
     def __init__(self) -> None:
         self.input_account_request: request_models.CreateAccountRequest
 
@@ -39,16 +42,22 @@ class CreateAccountController(interfaces.AccountControllerInterface):
         get_person_use_case = use_cases.GetPersonUseCase(
             person_repository=person_repository
         )
-        created_person = create_person_use_case.execute()
+        created_person = create_person_use_case.execute(
+            request_models.CreatePersonRequest(
+                name=json_input_data["name"],
+                phone=json_input_data["phone"],
+                address=json_input_data["address"],
+                city=self.DEFAULT_CITY,
+                country=self.DEFAULT_COUNTRY,
+            )
+        )
         if not created_person:
             existing_person = get_person_use_case.execute(
                 request_models.GetPersonByPhoneRequest(phone=json_input_data["phone"])
             )
 
-        person_id = created_person or (
-            existing_person.person_id
-            if (existing_person := existing_person) is not None
-            else None
+        person_id = getattr(created_person, "person_id", None) or getattr(
+            existing_person, "person_id", None
         )
 
         if person_id is None:

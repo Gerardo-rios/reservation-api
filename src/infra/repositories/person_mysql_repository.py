@@ -1,7 +1,11 @@
+import uuid
 from typing import Optional
+
+from sqlalchemy.exc import IntegrityError
 
 from src.domain import entities, interfaces
 from src.infra import db_models
+from src.interactor import errors
 
 
 class PersonMySQLRepository(interfaces.PersonRepositoryInterface):
@@ -28,7 +32,26 @@ class PersonMySQLRepository(interfaces.PersonRepositoryInterface):
         city: str,
         country: str,
     ) -> Optional[str]:
-        pass
+        new_person = db_models.PersonDBModel(
+            person_id=uuid.uuid4(),
+            name=name,
+            phone=phone,
+            address=address,
+            city=city,
+            country=country,
+        )
+
+        try:
+            self.__session.add(new_person)
+            self.__session.commit()
+            self.__session.refresh(new_person)
+        except IntegrityError:
+            self.__session.rollback()
+            raise errors.UniqueViolationError("Phone number already exists")
+
+        if new_person is not None:
+            return str(new_person.person_id)
+        return None
 
     def get_by_phone(self, phone: str) -> Optional[entities.Person]:
         db_person = (

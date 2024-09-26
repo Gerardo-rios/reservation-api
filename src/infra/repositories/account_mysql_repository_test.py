@@ -122,28 +122,6 @@ def test__mysql_account_repository__create_account__fails__when_account_already_
         )
 
 
-def test__mysql_account_repository__create_person_phone__fails__when_phone_number_already_exists(  # noqa
-    test_setup: Dict[str, Any]
-) -> None:
-    repository = test_setup["repository"]
-    test_data = test_setup["test_data"]
-
-    repository._AccountMySQLRepository__session.add.side_effect = IntegrityError(
-        "IntegrityError", "phone", "IntegrityError"
-    )
-
-    with pytest.raises(errors.UniqueViolationError):
-        repository.create(
-            email=test_data["new_account"]["email"],
-            password=test_data["new_account"]["password"],
-            user=test_data["new_account"]["username"],
-            photo=test_data["new_account"]["photo"],
-            status=test_data["new_account"]["status"],
-            role_id=test_data["new_account"]["role_id"],
-            person_id=test_data["new_account"]["person_id"],
-        )
-
-
 def test__mysql_account_repository__get_account__returns_account__when_account_exists(
     test_setup: Dict[str, Any]
 ) -> None:

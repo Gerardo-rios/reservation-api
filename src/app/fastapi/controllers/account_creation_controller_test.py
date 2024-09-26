@@ -70,7 +70,9 @@ def test_setup(
         description=fixture_role_data["description"],
     )
 
-    expected_create_person_use_case_result = "fa360eeb-f000-4fca-a737-71b239d88b5e"
+    expected_create_person_use_case_result = response_models.CreatePersonResponse(
+        person_id="fa360eeb-f000-4fca-a737-71b239d88b5e"
+    )
 
     expected_get_person_use_case_result = response_models.GetPersonResponse(
         person_id="fa360eeb-f000-4fca-a737-71b239d88b5e",

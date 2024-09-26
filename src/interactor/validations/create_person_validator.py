@@ -10,13 +10,6 @@ class CreatePersonInputDtoValidator(BaseInputValidator):
         super().__init__(data)
         self.data = data
         self.__schema = {
-            "person_id": {
-                "type": "string",
-                "minlength": 36,
-                "maxlength": 36,
-                "required": True,
-                "empty": False,
-            },
             "name": {
                 "type": "string",
                 "minlength": 2,

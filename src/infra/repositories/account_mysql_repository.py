@@ -49,10 +49,8 @@ class AccountMySQLRepository(interfaces.AccountRepositoryInterface):
             self.__session.add(new_account)
             self.__session.commit()
             self.__session.refresh(new_account)
-        except IntegrityError as e:
+        except IntegrityError:
             self.__session.rollback()
-            if "phone" in str(e.orig):
-                raise errors.UniqueViolationError("Phone number already exists")
             raise errors.UniqueViolationError("Account email already exists")
 
         if new_account is not None:

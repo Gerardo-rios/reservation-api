@@ -1,7 +1,7 @@
 from typing import Optional
 
 from src.domain import interfaces
-from src.interactor import request_models, response_models
+from src.interactor import errors, request_models, response_models
 
 
 class GetPersonUseCase:
@@ -13,7 +13,7 @@ class GetPersonUseCase:
     ) -> Optional[response_models.GetPersonResponse]:
         person = self.repository.get_by_phone(request_input.phone)
         if person is None:
-            return None
+            raise errors.ItemNotFoundException(request_input.phone, "person")
         result = response_models.GetPersonResponse(
             person_id=person.person_id,
             name=person.name,

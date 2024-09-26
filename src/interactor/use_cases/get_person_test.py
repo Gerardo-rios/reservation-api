@@ -4,7 +4,7 @@ import pytest
 from pytest_mock import MockFixture
 
 from src.domain import entities, interfaces
-from src.interactor import request_models, response_models, use_cases
+from src.interactor import errors, request_models, response_models, use_cases
 
 
 @pytest.fixture
@@ -56,7 +56,9 @@ def test__get_person_use_case__when_person_is_not_found(
     input_dto = request_models.GetPersonByPhoneRequest(
         phone="non_existing_phone_number"
     )
-    response = use_case.execute(input_dto)
 
+    with pytest.raises(errors.ItemNotFoundException) as exc_info:
+        use_case.execute(input_dto)
+
+    assert str(exc_info.value) == "Person 'non_existing_phone_number' was not found"
     dependencies["person_repository"].get_by_phone.assert_called_once()
-    assert response is None
