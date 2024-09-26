@@ -16,7 +16,7 @@ def dependencies_factory(
         person: entities.Person,
     ) -> Dict[str, Any]:
         person_repository_mock = mocker.Mock(interfaces.PersonRepositoryInterface)
-        person_repository_mock.create.return_value = person
+        person_repository_mock.create.return_value = person.person_id
         return {
             "person_repository": person_repository_mock,
         }

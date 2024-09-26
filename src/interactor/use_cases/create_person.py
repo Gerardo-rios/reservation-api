@@ -24,5 +24,5 @@ class CreatePersonUseCase:
         if person is None:
             raise errors.ItemNotCreatedException(request_input.name, "person")
 
-        result = response_models.CreatePersonResponse(person_id=person.person_id)
+        result = response_models.CreatePersonResponse(person_id=person)
         return result

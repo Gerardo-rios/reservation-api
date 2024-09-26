@@ -1,3 +1,4 @@
+from dataclasses import asdict
 from typing import Dict
 
 from fastapi import APIRouter, Depends
@@ -29,7 +30,7 @@ async def login_account(
     json_input_data: request_models.LoginRequest,
     controller: LoginAccountController = Depends(LoginAccountController),
 ) -> JSONResponse:
-    controller.create_request_data(json_input_data.to_dict())
+    controller.create_request_data(asdict(json_input_data))
     controller_response = controller.execute()
     json_response = jsonable_encoder(controller_response)
     return JSONResponse(content=json_response)
