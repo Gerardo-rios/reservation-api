@@ -2,5 +2,6 @@ from .db_models import AccountDBModel, DbBase, PersonDBModel, RolDBModel, Sessio
 from .repositories import (
     AccountMySQLRepository,
     LoginMySQLRepository,
+    PersonMySQLRepository,
     RolMySQLRepository,
 )

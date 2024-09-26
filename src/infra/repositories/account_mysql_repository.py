@@ -32,17 +32,8 @@ class AccountMySQLRepository(interfaces.AccountRepositoryInterface):
         photo: str,
         status: bool,
         role_id: str,
-        person: entities.Person,
+        person_id: str,
     ) -> Optional[entities.Account]:
-        new_person = db_models.PersonDBModel(
-            person_id=person.person_id,
-            name=person.name,
-            phone=person.phone,
-            address=person.address,
-            city=person.city,
-            country=person.country,
-        )
-
         new_account = db_models.AccountDBModel(
             account_id=uuid.uuid4(),
             email=email,
@@ -51,18 +42,15 @@ class AccountMySQLRepository(interfaces.AccountRepositoryInterface):
             photo=photo,
             status=status,
             role_id=role_id,
-            person_id=new_person.person_id,
+            person_id=person_id,
         )
 
         try:
-            self.__session.add(new_person)
             self.__session.add(new_account)
             self.__session.commit()
             self.__session.refresh(new_account)
-        except IntegrityError as e:
+        except IntegrityError:
             self.__session.rollback()
-            if "phone" in str(e.orig):
-                raise errors.UniqueViolationError("Phone number already exists")
             raise errors.UniqueViolationError("Account email already exists")
 
         if new_account is not None:
