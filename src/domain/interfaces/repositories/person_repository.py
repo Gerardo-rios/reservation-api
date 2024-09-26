@@ -12,5 +12,5 @@ class PersonRepositoryInterface(ABC):
         pass
 
     @abstractmethod
-    def find_by_phone(self, phone: str) -> Optional[Person]:
+    def get_by_phone(self, phone: str) -> Optional[Person]:
         pass

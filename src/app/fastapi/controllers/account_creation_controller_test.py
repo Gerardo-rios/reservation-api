@@ -70,16 +70,16 @@ def test_setup(
         description=fixture_role_data["description"],
     )
 
-    expected_create_person_use_case_result = {
-        "person_id": "fa360eeb-f000-4fca-a737-71b239d88b5e"
-    }
+    expected_create_person_use_case_result = "fa360eeb-f000-4fca-a737-71b239d88b5e"
 
-    expected_get_person_use_case_result = {
-        "person_id": "fa360eeb-f000-4fca-a737-71b239d88b5e",
-        "name": fixture_person_data["name"],
-        "phone": fixture_person_data["phone"],
-        "address": fixture_person_data["address"],
-    }
+    expected_get_person_use_case_result = response_models.GetPersonResponse(
+        person_id="fa360eeb-f000-4fca-a737-71b239d88b5e",
+        name=fixture_person_data["name"],
+        phone=fixture_person_data["phone"],
+        address=fixture_person_data["address"],
+        city=fixture_person_data["city"],
+        country=fixture_person_data["country"],
+    )
 
     expected_account_use_case_result = {
         "account_id": fixture_account_data["account_id"],
@@ -264,3 +264,22 @@ def test__create_account_controller__raises_error__with_missing_input_fields(
     with pytest.raises(ValueError) as exc_info:
         controller.create_request_data(fake_user_inputs)
     assert str(exc_info.value) == "Missing keys: password"
+
+
+def test__create_account_controller__raises_an_error_when_a_person_was_not_found_and_could_not_be_created(  # noqa
+    test_setup: Dict[str, Any]
+) -> None:
+    fake_user_inputs = test_setup["fake_user_inputs"]
+    mock_create_person_use_case_instance = test_setup[
+        "mock_create_person_use_case_instance"
+    ]
+    mock_get_person_use_case_instance = test_setup["mock_get_person_use_case_instance"]
+    mock_create_person_use_case_instance.execute.return_value = None
+    mock_get_person_use_case_instance.execute.return_value = None
+
+    controller = CreateAccountController()
+
+    with pytest.raises(ValueError) as exc_info:
+        controller.create_request_data(fake_user_inputs)
+        controller.execute()
+    assert str(exc_info.value) == "An error occurred while creating person"

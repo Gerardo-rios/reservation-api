@@ -39,9 +39,20 @@ class CreateAccountController(interfaces.AccountControllerInterface):
         get_person_use_case = use_cases.GetPersonUseCase(
             person_repository=person_repository
         )
-        person = create_person_use_case.execute()
-        if not person:
-            person = get_person_use_case.execute()
+        created_person = create_person_use_case.execute()
+        if not created_person:
+            existing_person = get_person_use_case.execute(
+                request_models.GetPersonByPhoneRequest(phone=json_input_data["phone"])
+            )
+
+        person_id = created_person or (
+            existing_person.person_id
+            if (existing_person := existing_person) is not None
+            else None
+        )
+
+        if person_id is None:
+            raise ValueError("An error occurred while creating person")
 
         self.input_account_request = request_models.CreateAccountRequest(
             email=json_input_data["email"],
@@ -49,7 +60,7 @@ class CreateAccountController(interfaces.AccountControllerInterface):
             user=json_input_data["user"],
             photo=json_input_data["photo"],
             role_id=role.role_id,
-            person_id=person["person_id"],
+            person_id=person_id,
         )
 
     def execute(self) -> response_models.CreateAccountResponse:

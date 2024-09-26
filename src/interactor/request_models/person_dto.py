@@ -6,6 +6,8 @@ class CreatePersonRequest:
     name: str
     phone: str
     address: str
+    city: str
+    country: str
 
 
 @dataclass
