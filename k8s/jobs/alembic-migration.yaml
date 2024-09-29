@@ -1,22 +1,26 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: fastapi-deployment
+  name: alembic-migration
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: fastapi-app
   template:
     metadata:
-      labels:
-        app: fastapi-app
+      name: alembic-migration
     spec:
+      restartPolicy: OnFailure
+      initContainers:
+      - name: wait-for-mysql
+        image: busybox
+        command: ['sh', '-c', 'until nc -z -v -w30 $MYSQL_HOST $MYSQL_PORT; do echo waiting for mysql; sleep 2; done;']
+        env:
+        - name: MYSQL_HOST
+          value: mysql-service
+        - name: MYSQL_PORT
+          value: "3306"
       containers:
-      - name: fastapi-app
+      - name: alembic-migration
         image: darlackinho/reservation-api-app:v1
-        ports:
-        - containerPort: 8000
+        command: ["alembic", "upgrade", "head"]
         env:
         - name: MYSQL_HOST
           value: mysql-service
@@ -37,5 +41,3 @@ spec:
             secretKeyRef:
               name: mysql-secrets
               key: mysql-database
-        - name: FASTAPI_ENV
-          value: "development"

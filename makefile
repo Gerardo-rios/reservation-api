@@ -1,4 +1,4 @@
-.PHONY: build up down logs shell test clean format db-rebuild mysql-cli db-dump db-restore check-python-version init isort
+.PHONY: build up down logs shell test clean format db-rebuild mysql-cli db-dump db-restore check-python-version init isort alembic-autogenerate alembic-upgrade push
 
 COMPOSE_FILE := docker-compose.yml
 
@@ -10,6 +10,9 @@ up:
 
 down:
 	docker compose -f $(COMPOSE_FILE) down
+
+push:
+	docker compose -f $(COMPOSE_FILE) push
 
 logs:
 	docker compose -f $(COMPOSE_FILE) logs -f
