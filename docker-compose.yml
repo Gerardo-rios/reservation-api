@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: ${DOCKER_USERNAME}/reservation-api-app:v1
+    image: ${DOCKER_REPO}:${VERSION}
     ports:
       - "8000:8000"
     restart: unless-stopped
