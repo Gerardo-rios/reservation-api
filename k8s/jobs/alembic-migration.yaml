@@ -8,18 +8,9 @@ spec:
       name: alembic-migration
     spec:
       restartPolicy: OnFailure
-      initContainers:
-      - name: wait-for-mysql
-        image: busybox
-        command: ['sh', '-c', 'until nc -z -v -w30 $MYSQL_HOST $MYSQL_PORT; do echo waiting for mysql; sleep 2; done;']
-        env:
-        - name: MYSQL_HOST
-          value: mysql-service
-        - name: MYSQL_PORT
-          value: "3306"
       containers:
       - name: alembic-migration
-        image: darlackinho/reservation-api-app:v1.1
+        image: ${DOCKER_REPO}:${VERSION}
         command: ["alembic", "upgrade", "head"]
         env:
         - name: MYSQL_HOST

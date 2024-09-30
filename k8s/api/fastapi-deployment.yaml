@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: fastapi-app
-        image: darlackinho/reservation-api-app:v1.1
+        image: ${DOCKER_REPO}:${VERSION}
         ports:
         - containerPort: 8000
         env:

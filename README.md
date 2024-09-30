@@ -52,6 +52,35 @@ make alembic-upgrade
 
 Your API should now be running at `http://localhost:8000`.
 
+
+## Local Deployment
+
+To deploy the API locally, you need minikube and kubectl installed.
+
+1. Start minikube:
+
+```bash
+minikube start
+```
+
+2. Push your docker image to minikube:
+
+```bash
+make docker-push VERSION=latest
+```
+
+3. Deploy the API:
+
+```bash
+make local-deploy VERSION=latest
+```
+
+4. Get the URL of the API:
+
+```bash
+minikube service fastapi-service --url
+```
+
 ## Available Commands
 
 Here are some useful commands you can use (assuming you have Make installed):
