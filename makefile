@@ -1,6 +1,8 @@
-.PHONY: build up down logs shell test clean format db-rebuild mysql-cli db-dump db-restore check-python-version init isort
+.PHONY: build up down logs shell test clean format db-rebuild mysql-cli db-dump db-restore check-python-version init isort alembic-autogenerate alembic-upgrade push
 
 COMPOSE_FILE := docker-compose.yml
+DOCKER_REPO := ${DOCKER_REPO}
+VERSION ?= latest
 
 build:
 	docker compose -f $(COMPOSE_FILE) build
@@ -10,6 +12,9 @@ up:
 
 down:
 	docker compose -f $(COMPOSE_FILE) down
+
+push:
+	docker compose -f $(COMPOSE_FILE) push
 
 logs:
 	docker compose -f $(COMPOSE_FILE) logs -f
@@ -67,3 +72,12 @@ alembic-autogenerate:
 
 alembic-upgrade:
 	alembic upgrade head
+
+docker-push:
+	@echo "Pushing docker images..."
+	docker build -t $(DOCKER_REPO):$(VERSION) .
+	docker push $(DOCKER_REPO):$(VERSION)
+
+local-deploy:
+	@echo "Deploying to local environment with version $(VERSION)..."
+	./minikube_local_deploy.sh $(VERSION)

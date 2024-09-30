@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: alembic-migration
+spec:
+  template:
+    metadata:
+      name: alembic-migration
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: alembic-migration
+        image: ${DOCKER_REPO}:${VERSION}
+        command: ["alembic", "upgrade", "head"]
+        env:
+        - name: MYSQL_HOST
+          value: mysql-service
+        - name: MYSQL_PORT
+          value: "3306"
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secrets
+              key: mysql-user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secrets
+              key: mysql-password
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secrets
+              key: mysql-database
