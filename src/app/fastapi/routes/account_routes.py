@@ -34,3 +34,14 @@ async def login_account(
     controller_response = controller.execute()
     json_response = jsonable_encoder(controller_response)
     return JSONResponse(content=json_response)
+
+
+@account_router.get("/account/{account_id}", status_code=200)
+async def get_account_data(
+    account_id: str,
+    controller: GetAccountDataController = Depends(GetAccountDataController),
+) -> JSONResponse:
+    controller.create_request_data({"account_id": account_id})
+    controller_response = controller.execute()
+    json_response = jsonable_encoder(controller_response)
+    return JSONResponse(content=json_response)
