@@ -4,4 +4,5 @@ from .fastapi import (
     LoginAccountController,
     app,
     create_fastapi_app,
+    verify_jwt_token,
 )

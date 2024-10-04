@@ -1,11 +1,11 @@
 from dataclasses import asdict
-from typing import Dict
+from typing import Any, Dict
 
 from fastapi import APIRouter, Depends
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
-from src.app.fastapi import controllers
+from src.app.fastapi import controllers, middleware
 from src.interactor import request_models
 
 account_router = APIRouter()
@@ -43,6 +43,7 @@ async def get_account_data(
     controller: controllers.GetAccountDataController = Depends(
         controllers.GetAccountDataController
     ),
+    token_payload: Dict[str, Any] = Depends(middleware.verify_jwt_token),
 ) -> JSONResponse:
     controller.create_request_data({"account_id": account_id})
     controller_response = controller.execute()
