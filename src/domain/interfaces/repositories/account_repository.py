@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Any, Dict, Optional
 
 from src.domain import Account
 
@@ -19,7 +19,7 @@ class AccountRepositoryInterface(ABC):
         pass
 
     @abstractmethod
-    def get(self, account_id: str) -> Optional[Account]:
+    def get(self, account_id: str) -> Optional[Dict[str, Any]]:
         pass
 
     @abstractmethod

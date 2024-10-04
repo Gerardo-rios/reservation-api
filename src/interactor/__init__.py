@@ -11,6 +11,7 @@ from .request_models import CreateAccountRequest, GetRoleRequest, LoginRequest
 from .use_cases import (
     CreateAccountUseCase,
     CreatePersonUseCase,
+    GetAccountUseCase,
     GetPersonUseCase,
     GetRoleUseCase,
     LoginUseCase,

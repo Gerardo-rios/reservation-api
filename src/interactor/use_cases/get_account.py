@@ -17,8 +17,8 @@ class GetAccountUseCase:
         if account is None:
             raise errors.ItemNotFoundException(request_input.account_id, "account")
         result = response_models.GetAccountResponse(
-            account=account.account,
-            person_id=account.person_id,
-            role_id=account.role_id,
+            account=account["account"],
+            person_id=account["person_id"],
+            role_id=account["role_id"],
         )
         return result
