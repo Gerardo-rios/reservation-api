@@ -7,7 +7,7 @@ from src.interactor import request_models, response_models, use_cases
 from . import controllers_utils
 
 
-class CreateAccountController(interfaces.AccountControllerInterface):
+class CreateAccountController(interfaces.CreateAccountControllerInterface):
     DEFAULT_CITY = "loja"
     DEFAULT_COUNTRY = "ecuador"
 

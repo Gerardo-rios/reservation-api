@@ -135,6 +135,8 @@ def test__mysql_account_repository__get_account__returns_account__when_account_e
     mock_account_instance.username = test_data["new_account"]["username"]
     mock_account_instance.photo = test_data["new_account"]["photo"]
     mock_account_instance.status = test_data["new_account"]["status"]
+    mock_account_instance.role_id = test_data["new_account"]["role_id"]
+    mock_account_instance.person_id = test_data["new_account"]["person_id"]
 
     repository._AccountMySQLRepository__session.query.return_value.filter_by.return_value.first.return_value = (  # noqa
         mock_account_instance
@@ -142,13 +144,15 @@ def test__mysql_account_repository__get_account__returns_account__when_account_e
 
     result = repository.get(account_id=test_data["new_account"]["account_id"])
 
-    assert isinstance(result, entities.Account)
-    assert result.account_id == test_data["new_account"]["account_id"]
-    assert result.email == test_data["new_account"]["email"]
-    assert result.password == test_data["new_account"]["password"]
-    assert result.user == test_data["new_account"]["username"]
-    assert result.photo == test_data["new_account"]["photo"]
-    assert result.status == test_data["new_account"]["status"]
+    assert isinstance(result["account"], entities.Account)
+    assert result["account"].account_id == test_data["new_account"]["account_id"]
+    assert result["account"].email == test_data["new_account"]["email"]
+    assert result["account"].password == test_data["new_account"]["password"]
+    assert result["account"].user == test_data["new_account"]["username"]
+    assert result["account"].photo == test_data["new_account"]["photo"]
+    assert result["account"].status == test_data["new_account"]["status"]
+    assert result["role_id"] == test_data["new_account"]["role_id"]
+    assert result["person_id"] == test_data["new_account"]["person_id"]
 
 
 def test__mysql_account_repository__get_account__returns_none__when_account_does_not_exist(  # noqa
