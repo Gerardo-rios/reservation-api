@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional
+from typing import Any, Dict, Optional
 
 from sqlalchemy.exc import IntegrityError
 
@@ -57,7 +57,7 @@ class AccountMySQLRepository(interfaces.AccountRepositoryInterface):
             return self.__db_to_entity(new_account)
         return None
 
-    def get(self, account_id: str) -> Optional[entities.Account]:
+    def get(self, account_id: str) -> Optional[Dict[str, Any]]:
         db_row = (
             self.__session.query(db_models.AccountDBModel)
             .filter_by(account_id=account_id)
@@ -65,7 +65,12 @@ class AccountMySQLRepository(interfaces.AccountRepositoryInterface):
         )
         if db_row is None:
             return None
-        return self.__db_to_entity(db_row)
+        account = self.__db_to_entity(db_row)
+        return {
+            "account": account,
+            "person_id": db_row.person_id,
+            "role_id": db_row.role_id,
+        }
 
     def update(self, account: entities.Account) -> Optional[entities.Account]:
         account_db_model = db_models.AccountDBModel(

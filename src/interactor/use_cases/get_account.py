@@ -1,5 +1,3 @@
-from typing import Optional
-
 from src.domain import interfaces
 from src.interactor import errors, request_models, response_models
 
@@ -12,7 +10,7 @@ class GetAccountUseCase:
 
     def execute(
         self, request_input: request_models.GetAccountByIdRequest
-    ) -> Optional[response_models.GetAccountResponse]:
+    ) -> response_models.GetAccountResponse:
         account = self.repository.get(request_input.account_id)
         if account is None:
             raise errors.ItemNotFoundException(request_input.account_id, "account")

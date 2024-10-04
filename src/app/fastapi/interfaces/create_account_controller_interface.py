@@ -4,7 +4,7 @@ from typing import Any, Dict
 from src.interactor import response_models
 
 
-class AccountControllerInterface(ABC):
+class CreateAccountControllerInterface(ABC):
     @abstractmethod
     def create_request_data(self, json_input_data: Dict[str, Any]) -> None:
         pass
