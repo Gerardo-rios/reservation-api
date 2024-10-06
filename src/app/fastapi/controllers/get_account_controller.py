@@ -19,6 +19,7 @@ class GetAccountDataController(interfaces.GetAccountControllerInterface):
             account_id=json_input_data["account_id"]
         )
 
+    # TODO: Add types to the return
     def execute(self) -> Dict[str, Any]:
         account_repository = repositories.AccountMySQLRepository()
         account_use_case = use_cases.GetAccountUseCase(
@@ -38,6 +39,7 @@ class GetAccountDataController(interfaces.GetAccountControllerInterface):
             request_input=request_models.GetRoleRequest(role_id=account.role_id)
         )
 
+        # TODO: Not include the password in the response
         response = {"account": account.account, "person": person, "role": role}
 
         return response
