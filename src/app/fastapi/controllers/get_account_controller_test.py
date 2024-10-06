@@ -37,14 +37,43 @@ def test_setup(
     )
     mock_account_use_case_instance = mock_account_use_case.return_value
 
+    mock_person_repository = mocker.patch(
+        "src.app.fastapi.controllers.get_account_controller.repositories.PersonMySQLRepository"  # noqa
+    )
+    mock_person_use_case = mocker.patch(
+        "src.app.fastapi.controllers.get_account_controller.use_cases.GetPersonUseCase"  # noqa
+    )
+    mock_person_use_case_instance = mock_person_use_case.return_value
+
+    mock_role_repository = mocker.patch(
+        "src.app.fastapi.controllers.get_account_controller.repositories.RolMySQLRepository"  # noqa
+    )
+    mock_role_use_case = mocker.patch(
+        "src.app.fastapi.controllers.get_account_controller.use_cases.GetRoleUseCase"  # noqa
+    )
+    mock_role_use_case_instance = mock_role_use_case.return_value
+
     expected_get_account_use_case_response = response_models.GetAccountResponse(
         account=account,
         person_id=fixture_person_data["person_id"],
         role_id=fixture_role_data["role_id"],
     )
-
     mock_account_use_case_instance.execute.return_value = (
         expected_get_account_use_case_response
+    )
+
+    expected_get_person_use_case_response = response_models.GetPersonResponse(
+        **fixture_person_data
+    )
+    mock_person_use_case_instance.execute.return_value = (
+        expected_get_person_use_case_response
+    )
+
+    expected_get_role_use_case_response = response_models.GetRoleResponse(
+        **fixture_role_data
+    )
+    mock_role_use_case_instance.execute.return_value = (
+        expected_get_role_use_case_response
     )
 
     return {
@@ -53,6 +82,14 @@ def test_setup(
         "mock_account_use_case": mock_account_use_case,
         "mock_account_use_case_instance": mock_account_use_case_instance,
         "expected_get_account_use_case_response": expected_get_account_use_case_response,  # noqa
+        "mock_person_repository": mock_person_repository,
+        "mock_person_use_case": mock_person_use_case,
+        "mock_person_use_case_instance": mock_person_use_case_instance,
+        "expected_get_person_use_case_response": expected_get_person_use_case_response,  # noqa
+        "mock_role_repository": mock_role_repository,
+        "mock_role_use_case": mock_role_use_case,
+        "mock_role_use_case_instance": mock_role_use_case_instance,
+        "expected_get_role_use_case_response": expected_get_role_use_case_response,
     }
 
 
@@ -66,6 +103,18 @@ def test__get_account_controller__returns__an_account_id__when_successful(
     expected_get_account_use_case_response = test_setup[
         "expected_get_account_use_case_response"
     ]
+    mock_person_repository = test_setup["mock_person_repository"]
+    mock_person_use_case = test_setup["mock_person_use_case"]
+    mock_person_use_case_instance = test_setup["mock_person_use_case_instance"]
+    expected_get_person_use_case_response = test_setup[
+        "expected_get_person_use_case_response"
+    ]
+    mock_role_repository = test_setup["mock_role_repository"]
+    mock_role_use_case = test_setup["mock_role_use_case"]
+    mock_role_use_case_instance = test_setup["mock_role_use_case_instance"]
+    expected_get_role_use_case_response = test_setup[
+        "expected_get_role_use_case_response"
+    ]
 
     get_account_input_dto = request_models.GetAccountByIdRequest(
         account_id=fake_input["account_id"]
@@ -75,13 +124,38 @@ def test__get_account_controller__returns__an_account_id__when_successful(
     result = controller.execute()
 
     mock_account_repository.assert_called_once()
+    mock_person_repository.assert_called_once()
+    mock_role_repository.assert_called_once()
     mock_account_use_case.assert_called_once_with(
         account_repository=mock_account_repository.return_value,
+    )
+    mock_person_use_case.assert_called_once_with(
+        person_repository=mock_person_repository.return_value,
+    )
+    mock_role_use_case.assert_called_once_with(
+        role_repository=mock_role_repository.return_value,
     )
     mock_account_use_case_instance.execute.assert_called_once_with(
         request_input=get_account_input_dto
     )
-    assert result == expected_get_account_use_case_response
+    mock_person_use_case_instance.execute.assert_called_once_with(
+        request_input=request_models.GetPersonRequest(
+            person_id=expected_get_account_use_case_response.person_id
+        )
+    )
+    mock_role_use_case_instance.execute.assert_called_once_with(
+        request_input=request_models.GetRoleRequest(
+            role_id=expected_get_account_use_case_response.role_id
+        )
+    )
+
+    expected_response = {
+        "account": expected_get_account_use_case_response.account,
+        "person": expected_get_person_use_case_response,
+        "role": expected_get_role_use_case_response,
+    }
+
+    assert result == expected_response
 
 
 def test__get_account__raises_value_errors__when_some_inputs_are_missing(

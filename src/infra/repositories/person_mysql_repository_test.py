@@ -132,3 +132,40 @@ def test__create_person__fails__when_a_person_with_the_same_phone_number_already
     mock_session.add.assert_called_once()
     mock_session.commit.assert_not_called()
     mock_session.refresh.assert_not_called()
+
+
+def test__get_person_by_id__when_the_person_exists_in_database(
+    test_setup: Dict[str, Any],
+) -> None:
+    repository = test_setup["repository"]
+    mock_session = test_setup["mock_session"]
+    test_data = test_setup["test_data"]
+    person_data = test_data["persons"][0]
+
+    db_person = PersonDBModel(**person_data)
+    mock_session.query.return_value.filter_by.return_value.first.return_value = (
+        db_person
+    )
+
+    result = repository.get_by_id(person_id=person_data["person_id"])
+
+    assert isinstance(result, Person)
+    assert result.person_id == person_data["person_id"]
+    assert result.name == person_data["name"]
+    assert result.phone == person_data["phone"]
+    assert result.address == person_data["address"]
+    assert result.city == person_data["city"]
+    assert result.country == person_data["country"]
+
+
+def test__get_person_by_id__when_the_person_does_not_exist_in_database(
+    test_setup: Dict[str, Any],
+) -> None:
+    repository = test_setup["repository"]
+    mock_session = test_setup["mock_session"]
+
+    mock_session.query.return_value.filter_by.return_value.first.return_value = None
+
+    result = repository.get_by_id(person_id="non_existing_person_id")
+
+    assert result is None

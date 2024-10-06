@@ -60,3 +60,13 @@ class PersonMySQLRepository(interfaces.PersonRepositoryInterface):
         if db_person is None:
             return None
         return self.__db_person_to_entity_person(db_person)
+
+    def get_by_id(self, person_id: str) -> Optional[entities.Person]:
+        db_person = (
+            self.__session.query(db_models.PersonDBModel)
+            .filter_by(person_id=person_id)
+            .first()
+        )
+        if db_person is None:
+            return None
+        return self.__db_person_to_entity_person(db_person)
