@@ -15,10 +15,20 @@ class RolMySQLRepository(interfaces.RoleRepositoryInterface):
             description=db_row.description,
         )
 
-    def get(self, role_name: str) -> Optional[entities.Role]:
+    def get_by_name(self, role_name: str) -> Optional[entities.Role]:
         db_row = (
             self.__session.query(db_models.RolDBModel)
             .filter_by(role_name=role_name)
+            .first()
+        )
+        if db_row is None:
+            return None
+        return self.__db_to_entity(db_row)
+
+    def get_by_id(self, role_id: str) -> Optional[entities.Role]:
+        db_row = (
+            self.__session.query(db_models.RolDBModel)
+            .filter_by(role_id=role_id)
             .first()
         )
         if db_row is None:
