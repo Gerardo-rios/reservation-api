@@ -1,8 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
-from src.interactor import response_models
-
 
 class GetAccountControllerInterface(ABC):
     @abstractmethod
@@ -10,5 +8,5 @@ class GetAccountControllerInterface(ABC):
         pass
 
     @abstractmethod
-    def execute(self) -> response_models.GetAccountResponse:
+    def execute(self) -> Dict[str, Any]:
         pass

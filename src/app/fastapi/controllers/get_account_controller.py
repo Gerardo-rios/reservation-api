@@ -2,7 +2,7 @@ from typing import Any, Dict
 
 from src.app.fastapi import interfaces
 from src.infra import repositories
-from src.interactor import request_models, response_models, use_cases
+from src.interactor import request_models, use_cases
 
 from . import controllers_utils
 
@@ -19,8 +19,25 @@ class GetAccountDataController(interfaces.GetAccountControllerInterface):
             account_id=json_input_data["account_id"]
         )
 
-    def execute(self) -> response_models.GetAccountResponse:
-        repository = repositories.AccountMySQLRepository()
-        use_case = use_cases.GetAccountUseCase(account_repository=repository)
-        response = use_case.execute(request_input=self.get_account_request)
+    def execute(self) -> Dict[str, Any]:
+        account_repository = repositories.AccountMySQLRepository()
+        account_use_case = use_cases.GetAccountUseCase(
+            account_repository=account_repository
+        )
+        account = account_use_case.execute(request_input=self.get_account_request)
+        person_repository = repositories.PersonMySQLRepository()
+        person_use_case = use_cases.GetPersonUseCase(
+            person_repository=person_repository
+        )
+        person = person_use_case.execute(
+            request_input=request_models.GetPersonRequest(person_id=account.person_id)
+        )
+        role_repository = repositories.RolMySQLRepository()
+        role_use_case = use_cases.GetRoleUseCase(role_repository=role_repository)
+        role = role_use_case.execute(
+            request_input=request_models.GetRoleRequest(role_id=account.role_id)
+        )
+
+        response = {"account": account.account, "person": person, "role": role}
+
         return response
