@@ -53,7 +53,7 @@ class CreateAccountController(interfaces.CreateAccountControllerInterface):
         )
         if not created_person:
             existing_person = get_person_use_case.execute(
-                request_models.GetPersonByPhoneRequest(phone=json_input_data["phone"])
+                request_models.GetPersonRequest(phone=json_input_data["phone"])
             )
 
         person_id = getattr(created_person, "person_id", None) or getattr(

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass
@@ -11,5 +12,6 @@ class CreatePersonRequest:
 
 
 @dataclass
-class GetPersonByPhoneRequest:
-    phone: str
+class GetPersonRequest:
+    person_id: Optional[str] = None
+    phone: Optional[str] = None
