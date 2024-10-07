@@ -17,18 +17,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-
-      - name: Install dependencies
-        run: |
-          poetry install
-
       - name: Run tests
         run: |
-          poetry run pytest
+          make test
 
       - name: Build Docker image
         run: |
@@ -40,7 +31,7 @@ jobs:
       
       - name: Deploy to Minikube
         run: |
-          make deploy local-deploy VERSION=${{ github.sha }}
+          make local-deploy VERSION=${{ github.sha }}
 
 
       
