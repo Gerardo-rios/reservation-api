@@ -28,5 +28,5 @@ kubectl wait --for=condition=complete --timeout=300s job/alembic-migration
 
 echo "Deployment of version ${VERSION} completed!"
 
-echo "You can access the FastAPI service at the following URL:"
-minikube service fastapi-service --url
+echo "You can access the FastAPI service by running the following command:"
+echo "minikube service fastapi-service --url"
