@@ -1,4 +1,4 @@
-name: UNIT_TESTS
+name: CI/CD
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: self-hosted
 
     steps:
@@ -29,3 +29,18 @@ jobs:
       - name: Run tests
         run: |
           poetry run pytest
+
+      - name: Build Docker image
+        run: |
+          make build
+      
+      - name: Push Docker image
+        run: |
+          make docker-push VERSION=${{ github.sha }}
+      
+      - name: Deploy to Minikube
+        run: |
+          make deploy local-deploy VERSION=${{ github.sha }}
+
+
+      
