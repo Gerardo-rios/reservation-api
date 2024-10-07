@@ -165,3 +165,7 @@ cython_debug/
 # local-database
 
 db/mysql
+
+# github
+
+actions-runner/
