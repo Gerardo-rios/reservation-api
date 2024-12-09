@@ -1,6 +1,6 @@
 # Fields Reservation API
 
-This is the backend API for a reservations app, which includes an admin section and a user section (mobile). This project is part of the ioet University 2.0 program.
+This is the backend API for a reservations app, which includes an admin section (web) and a user section (mobile).
 
 ## Table of Contents
 
